@@ -1,0 +1,218 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projects\\FarmBreedingAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\models\\growthrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\models\\growthrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\models\\animal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\models\\animal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\controllers\\photocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\controllers\\photocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\controllers\\growthrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\controllers\\growthrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\controllers\\animalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\controllers\\animalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\dotnet\\sdk\\9.0.312\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|d:\\projects\\farmbreedingapi\\farmbreedingapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{72D896EE-EA7A-42AE-BB28-369F9985AAFC}|FarmBreedingAPI\\FarmBreedingAPI.csproj|solutionrelative:farmbreedingapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\appsettings.Development.json",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\appsettings.Development.json",
+              "RelativeToolTip": "FarmBreedingAPI\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T14:57:06.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PhotoController.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\PhotoController.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Controllers\\PhotoController.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\PhotoController.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Controllers\\PhotoController.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAIwH8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T21:13:12.285Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Animal.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\Animal.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Models\\Animal.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\Animal.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Models\\Animal.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T11:28:48.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Category.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Models\\Category.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\Category.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Models\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T13:19:03.252Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GrowthRecord.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\GrowthRecord.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Models\\GrowthRecord.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Models\\GrowthRecord.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Models\\GrowthRecord.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T01:18:39.66Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GrowthRecordController.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\GrowthRecordController.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Controllers\\GrowthRecordController.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\GrowthRecordController.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Controllers\\GrowthRecordController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAkwFsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T01:19:14.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CategoryController.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\CategoryController.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Controllers\\CategoryController.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\CategoryController.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Controllers\\CategoryController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAADkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T13:19:52.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\appsettings.json",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\appsettings.json",
+              "RelativeToolTip": "FarmBreedingAPI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T14:56:56.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AnimalController.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\AnimalController.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Controllers\\AnimalController.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Controllers\\AnimalController.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Controllers\\AnimalController.cs",
+              "ViewState": "AgIAAL8AAAAAAAAAAAAkwNgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T11:29:17.387Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Program.cs",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Program.cs",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Program.cs",
+              "RelativeToolTip": "FarmBreedingAPI\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwB0AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-13T01:19:37.003Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Microsoft.PackageDependencyResolution.targets",
+              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.312\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
+              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.312\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
+              "ViewState": "AgIAAPoAAAAAAAAAAAAwwAkBAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-03-15T19:40:01.571Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "FarmBreedingAPI\\Properties\\launchSettings.json",
+              "ToolTip": "D:\\Projects\\FarmBreedingAPI\\FarmBreedingAPI\\Properties\\launchSettings.json",
+              "RelativeToolTip": "FarmBreedingAPI\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-13T14:17:03.544Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
