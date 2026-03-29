@@ -81,3 +81,6 @@ D:\Projects\FarmBreedingAPI\FarmBreedingAPI\obj\Debug\net9.0\FarmBreedingAPI.pdb
 D:\Projects\FarmBreedingAPI\FarmBreedingAPI\obj\Debug\net9.0\FarmBreedingAPI.genruntimeconfig.cache
 D:\Projects\FarmBreedingAPI\FarmBreedingAPI\obj\Debug\net9.0\ref\FarmBreedingAPI.dll
 D:\Projects\FarmBreedingAPI\FarmBreedingAPI\bin\Debug\net9.0\Npgsql.dll
+D:\Projects\FarmBreedingAPI\FarmBreedingAPI\bin\Debug\net9.0\CloudinaryDotNet.dll
+D:\Projects\FarmBreedingAPI\FarmBreedingAPI\bin\Debug\net9.0\Newtonsoft.Json.dll
+D:\Projects\FarmBreedingAPI\FarmBreedingAPI\obj\Debug\net9.0\FarmBreedingAPI.sourcelink.json

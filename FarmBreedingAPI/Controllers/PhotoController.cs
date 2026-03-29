@@ -3,6 +3,9 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Configuration;
 
 namespace FarmBreedingAPI.Controllers
 {
@@ -13,19 +16,53 @@ namespace FarmBreedingAPI.Controllers
         private readonly string connectionString =
 "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
 
+        private readonly Cloudinary _cloudinary;
+
+        public PhotoController(IConfiguration config)
+        {
+            var account = new Account(
+                config["Cloudinary:CloudName"],
+                config["Cloudinary:ApiKey"],
+                config["Cloudinary:ApiSecret"]
+            );
+
+            _cloudinary = new Cloudinary(account);
+        }
+
         //-----------------------------------------
-        // 1️⃣ SAVE PHOTO URLs (NO AZURE)
+        // 1️⃣ UPLOAD + SAVE (REAL IMAGES)
         //-----------------------------------------
         [HttpPost("upload")]
         public async Task<IActionResult> Upload()
         {
             try
             {
-                string atcode = Request.Form["atcode"].ToString();
+                string atcode = Request.Form["atcode"];
 
-                string url1 = Request.Form["photo1"];
-                string url2 = Request.Form["photo2"];
-                string url3 = Request.Form["photo3"];
+                string url1 = null;
+                string url2 = null;
+                string url3 = null;
+
+                // PHOTO 1
+                if (Request.Form.Files["photo1"] != null)
+                {
+                    var uploadResult = await UploadToCloudinary(Request.Form.Files["photo1"]);
+                    url1 = uploadResult;
+                }
+
+                // PHOTO 2
+                if (Request.Form.Files["photo2"] != null)
+                {
+                    var uploadResult = await UploadToCloudinary(Request.Form.Files["photo2"]);
+                    url2 = uploadResult;
+                }
+
+                // PHOTO 3
+                if (Request.Form.Files["photo3"] != null)
+                {
+                    var uploadResult = await UploadToCloudinary(Request.Form.Files["photo3"]);
+                    url3 = uploadResult;
+                }
 
                 await using var conn = new NpgsqlConnection(connectionString);
                 await conn.OpenAsync();
@@ -39,18 +76,35 @@ namespace FarmBreedingAPI.Controllers
                 await using var cmd = new NpgsqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@ATCode", atcode);
-                cmd.Parameters.AddWithValue("@Photo01", string.IsNullOrEmpty(url1) ? (object)DBNull.Value : url1);
-                cmd.Parameters.AddWithValue("@Photo02", string.IsNullOrEmpty(url2) ? (object)DBNull.Value : url2);
-                cmd.Parameters.AddWithValue("@Photo03", string.IsNullOrEmpty(url3) ? (object)DBNull.Value : url3);
+                cmd.Parameters.AddWithValue("@Photo01", (object?)url1 ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Photo02", (object?)url2 ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Photo03", (object?)url3 ?? DBNull.Value);
 
                 await cmd.ExecuteNonQueryAsync();
 
-                return Ok("Photos saved");
+                return Ok("Photos uploaded + saved");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        //-----------------------------------------
+        // CLOUDINARY HELPER
+        //-----------------------------------------
+        private async Task<string> UploadToCloudinary(IFormFile file)
+        {
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(file.FileName, stream)
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            return result.SecureUrl.ToString();
         }
 
         //-----------------------------------------
