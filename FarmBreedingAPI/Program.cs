@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
-// Your existing OpenAPI (DO NOT CHANGE)
+// OpenAPI (keep)
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -17,14 +17,29 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// ❌ Disable this for Render
+// ❌ DO NOT use HTTPS redirect on Render
 // app.UseHttpsRedirection();
+
+// 🔥 VERSION CONTROL MIDDLEWARE (MUST BE BEFORE CONTROLLERS)
+app.Use(async (context, next) =>
+{
+    var version = context.Request.Headers["app-version"].ToString();
+
+    if (string.IsNullOrEmpty(version) || version != "2")
+    {
+        context.Response.StatusCode = 426;
+        await context.Response.WriteAsync("Update required");
+        return;
+    }
+
+    await next();
+});
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Health check (important for Render)
+// Health check (Render needs this)
 app.MapGet("/", () => "API is running...");
 
 app.Run();
