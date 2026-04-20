@@ -202,11 +202,18 @@ namespace FarmBreedingAPI.Controllers
                 cmd.Parameters.AddWithValue("@ATCategoryCode", model.ATCategoryCode ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@DOB", model.DOB ?? (object)DBNull.Value);
 
-                cmd.Parameters.AddWithValue("@SourceType", model.SourceType ?? (object)DBNull.Value);
+                
                 cmd.Parameters.AddWithValue("@PurchaseDate", model.PurchaseDate ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Price", model.Price ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@AgentName", model.AgentName ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@MotherCode", model.MotherCode ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Price",
+                    model.Price.HasValue ? model.Price.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@MotherCode",
+                    string.IsNullOrEmpty(model.MotherCode) ? (object)DBNull.Value : model.MotherCode);
+
+                cmd.Parameters.AddWithValue("@AgentName",
+                    string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
+
+                cmd.Parameters.AddWithValue("@SourceType",
+                    string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
 
                 int rows = await cmd.ExecuteNonQueryAsync();
 
