@@ -26,45 +26,36 @@ namespace FarmBreedingAPI.Controllers
                 await conn.OpenAsync();
 
                 string sql = @"
-                SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
-                       sourcetype, purchasedate, price, agentname, mothercode
-                FROM ""ArticleInfo01"" 
-                WHERE ""ATCode""=@ATCode";
+        SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
+               sourcetype, purchasedate, price, agentname, mothercode
+        FROM ""ArticleInfo01"" 
+        WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ATCode", atcode);
 
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                if (!await reader.ReadAsync())
+                    return NotFound("Animal not found");
+
+                DateTime? dobValue = reader["DOB"] == DBNull.Value
+                    ? null
+                    : Convert.ToDateTime(reader["DOB"]);
+
+                return Ok(new
                 {
-                    if (await reader.ReadAsync())
-                    {
-                        DateTime? dobValue = null;
+                    atCode = reader["ATCode"].ToString(),
+                    gender = reader["gender"]?.ToString(),
+                    atCategoryCode = reader["ATCategoryCode"]?.ToString(),
+                    dob = dobValue,
 
-                        if (reader["DOB"] != DBNull.Value)
-                        {
-                            if (reader["DOB"] is DateTime dt)
-                                dobValue = dt;
-                            else if (reader["DOB"] is DateOnly d)
-                                dobValue = d.ToDateTime(TimeOnly.MinValue);
-                        }
-
-                        return Ok(new
-                        {
-                            atCode = reader["ATCode"].ToString(),
-                            gender = reader["gender"]?.ToString(),
-                            atCategoryCode = reader["ATCategoryCode"]?.ToString(),
-                            dob = dobValue,
-
-                            sourceType = reader["sourcetype"]?.ToString(),
-                            purchaseDate = reader["purchasedate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["purchasedate"]),
-                            price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
-                            agentName = reader["agentname"]?.ToString(),
-                            motherCode = reader["mothercode"]?.ToString()
-                        });
-                    }
-                }
-
-                return NotFound();
+                    sourceType = reader["sourcetype"] == DBNull.Value ? null : reader["sourcetype"].ToString(),
+                    purchaseDate = reader["purchasedate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["purchasedate"]),
+                    price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
+                    agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
+                    motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString()
+                });
             }
             catch (Exception ex)
             {
