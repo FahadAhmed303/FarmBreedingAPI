@@ -21,40 +21,29 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 
-// 🔥 LOGIN + VERSION CONTROL (FINAL - DO NOT CHANGE AGAIN)
+// 🔥 VERSION CONTROL ONLY (FOCUS ON YOUR REQUIREMENT)
 app.Use(async (context, next) =>
 {
     var path = context.Request.Path.Value?.ToLower();
 
-    // ✅ Allow health check
-    if (path == "/")
+    // Allow root and login API
+    if (path == "/" || path.Contains("/api/auth/login"))
     {
         await next();
         return;
     }
 
-    // ✅ Allow login API
-    if (path != null && path.Contains("/api/auth/login"))
-    {
-        await next();
-        return;
-    }
-
-    // ❌ BLOCK if not logged in
-    var isLoggedIn = context.Request.Headers["isLoggedIn"].ToString();
-    if (isLoggedIn != "true")
-    {
-        context.Response.StatusCode = 401;
-        await context.Response.WriteAsync("Login required");
-        return;
-    }
-
-    // ❌ BLOCK if wrong version
     var version = context.Request.Headers["app-version"].ToString();
+
+    // ❌ BLOCK OLD OR MISSING VERSION
     if (string.IsNullOrEmpty(version) || version != "2")
     {
         context.Response.StatusCode = 426;
-        await context.Response.WriteAsync("Update required");
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsync(
+            "{\"message\":\"Version is old. Please update your application.\"}"
+        );
         return;
     }
 
@@ -65,7 +54,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Health check (important for Render)
+// Health check
 app.MapGet("/", () => "API is running...");
 
 app.Run();
