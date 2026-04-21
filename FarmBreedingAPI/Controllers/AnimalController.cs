@@ -15,7 +15,7 @@ namespace FarmBreedingAPI.Controllers
 "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
 
         // ============================
-        // 1. FETCH ANIMAL
+        // 1. FETCH ANIMAL (FIXED)
         // ============================
         [HttpGet("{atcode}")]
         public async Task<IActionResult> GetAnimal(string atcode)
@@ -26,10 +26,10 @@ namespace FarmBreedingAPI.Controllers
                 await conn.OpenAsync();
 
                 string sql = @"
-        SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
-               sourcetype, purchasedate, price, agentname, mothercode
-        FROM ""ArticleInfo01"" 
-        WHERE ""ATCode"" = @ATCode";
+                SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
+                       sourcetype, purchasedate, price, agentname, mothercode
+                FROM ""ArticleInfo01"" 
+                WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ATCode", atcode);
@@ -39,19 +39,37 @@ namespace FarmBreedingAPI.Controllers
                 if (!await reader.ReadAsync())
                     return NotFound("Animal not found");
 
-                DateTime? dobValue = reader["DOB"] == DBNull.Value
-                    ? null
-                    : Convert.ToDateTime(reader["DOB"]);
+                // ✅ DOB FIX
+                DateTime? dobValue = null;
+                if (reader["DOB"] != DBNull.Value)
+                {
+                    var val = reader["DOB"];
+                    if (val is DateTime dt)
+                        dobValue = dt;
+                    else if (val is DateOnly d)
+                        dobValue = d.ToDateTime(TimeOnly.MinValue);
+                }
+
+                // ✅ PURCHASE DATE FIX
+                DateTime? purchaseDateValue = null;
+                if (reader["purchasedate"] != DBNull.Value)
+                {
+                    var val = reader["purchasedate"];
+                    if (val is DateTime dt)
+                        purchaseDateValue = dt;
+                    else if (val is DateOnly d)
+                        purchaseDateValue = d.ToDateTime(TimeOnly.MinValue);
+                }
 
                 return Ok(new
                 {
-                    atCode = reader["ATCode"].ToString(),
+                    atCode = reader["ATCode"]?.ToString(),
                     gender = reader["gender"]?.ToString(),
                     atCategoryCode = reader["ATCategoryCode"]?.ToString(),
                     dob = dobValue,
 
                     sourceType = reader["sourcetype"] == DBNull.Value ? null : reader["sourcetype"].ToString(),
-                    purchaseDate = reader["purchasedate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["purchasedate"]),
+                    purchaseDate = purchaseDateValue,
                     price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
                     agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
                     motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString()
@@ -152,14 +170,13 @@ namespace FarmBreedingAPI.Controllers
         }
 
         // ============================
-        // 4. SAVE ANIMAL (UPDATED)
+        // 4. SAVE ANIMAL
         // ============================
         [HttpPost("save")]
         public async Task<IActionResult> SaveAnimal([FromBody] Animal model)
         {
             try
             {
-                // 🔥 BUSINESS LOGIC
                 if (model.SourceType == "PURCHASE")
                 {
                     model.MotherCode = null;
@@ -192,26 +209,16 @@ namespace FarmBreedingAPI.Controllers
                 cmd.Parameters.AddWithValue("@gender", model.gender ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ATCategoryCode", model.ATCategoryCode ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@DOB", model.DOB ?? (object)DBNull.Value);
-
-                
                 cmd.Parameters.AddWithValue("@PurchaseDate", model.PurchaseDate ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Price",
-                    model.Price.HasValue ? model.Price.Value : (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@MotherCode",
-                    string.IsNullOrEmpty(model.MotherCode) ? (object)DBNull.Value : model.MotherCode);
-
-                cmd.Parameters.AddWithValue("@AgentName",
-                    string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
-
-                cmd.Parameters.AddWithValue("@SourceType",
-                    string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
+                cmd.Parameters.AddWithValue("@Price", model.Price.HasValue ? model.Price.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@MotherCode", string.IsNullOrEmpty(model.MotherCode) ? (object)DBNull.Value : model.MotherCode);
+                cmd.Parameters.AddWithValue("@AgentName", string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
+                cmd.Parameters.AddWithValue("@SourceType", string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
 
                 int rows = await cmd.ExecuteNonQueryAsync();
 
                 if (rows == 0)
-                {
                     return BadRequest("UPDATE FAILED");
-                }
 
                 return Ok(new { message = "Updated successfully" });
             }
