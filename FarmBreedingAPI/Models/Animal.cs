@@ -7,10 +7,11 @@
         public string ATCategoryCode { get; set; } = string.Empty;
         public DateTime? DOB { get; set; }
 
-        public string SourceType { get; set; }
+        // 🔥 OPTIONAL FIELDS (FIXED)
+        public string? SourceType { get; set; }
         public DateTime? PurchaseDate { get; set; }
         public decimal? Price { get; set; }
-        public string AgentName { get; set; }
-        public string MotherCode { get; set; }
+        public string? AgentName { get; set; }
+        public string? MotherCode { get; set; }
     }
 }
