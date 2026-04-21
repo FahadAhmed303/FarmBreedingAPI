@@ -15,7 +15,24 @@ namespace FarmBreedingAPI.Controllers
 "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
 
         // ============================
-        // 1. FETCH ANIMAL (FIXED)
+        // 🔥 COMMON DATE FIX METHOD
+        // ============================
+        private DateTime? SafeDate(object val)
+        {
+            if (val == null || val == DBNull.Value)
+                return null;
+
+            if (val is DateTime dt)
+                return dt;
+
+            if (val is DateOnly d)
+                return d.ToDateTime(TimeOnly.MinValue);
+
+            return null;
+        }
+
+        // ============================
+        // 1. FETCH ANIMAL
         // ============================
         [HttpGet("{atcode}")]
         public async Task<IActionResult> GetAnimal(string atcode)
@@ -39,37 +56,15 @@ namespace FarmBreedingAPI.Controllers
                 if (!await reader.ReadAsync())
                     return NotFound("Animal not found");
 
-                // ✅ DOB FIX
-                DateTime? dobValue = null;
-                if (reader["DOB"] != DBNull.Value)
-                {
-                    var val = reader["DOB"];
-                    if (val is DateTime dt)
-                        dobValue = dt;
-                    else if (val is DateOnly d)
-                        dobValue = d.ToDateTime(TimeOnly.MinValue);
-                }
-
-                // ✅ PURCHASE DATE FIX
-                DateTime? purchaseDateValue = null;
-                if (reader["purchasedate"] != DBNull.Value)
-                {
-                    var val = reader["purchasedate"];
-                    if (val is DateTime dt)
-                        purchaseDateValue = dt;
-                    else if (val is DateOnly d)
-                        purchaseDateValue = d.ToDateTime(TimeOnly.MinValue);
-                }
-
                 return Ok(new
                 {
                     atCode = reader["ATCode"]?.ToString(),
                     gender = reader["gender"]?.ToString(),
                     atCategoryCode = reader["ATCategoryCode"]?.ToString(),
-                    dob = dobValue,
+                    dob = SafeDate(reader["DOB"]),
 
                     sourceType = reader["sourcetype"] == DBNull.Value ? null : reader["sourcetype"].ToString(),
-                    purchaseDate = purchaseDateValue,
+                    purchaseDate = SafeDate(reader["purchasedate"]),
                     price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
                     agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
                     motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString()
@@ -82,7 +77,7 @@ namespace FarmBreedingAPI.Controllers
         }
 
         // ============================
-        // 2. FETCH GROWTH
+        // 2. FETCH GROWTH (FIXED)
         // ============================
         [HttpGet("growth/{atcode}")]
         public async Task<IActionResult> GetGrowth(string atcode)
@@ -113,7 +108,7 @@ namespace FarmBreedingAPI.Controllers
                             weight = reader["Weight"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Weight"]),
                             height = reader["Height"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Height"]),
                             width = reader["Width"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Width"]),
-                            recordDate = reader["RecordDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["RecordDate"])
+                            recordDate = SafeDate(reader["RecordDate"])   // 🔥 FIX HERE
                         });
                     }
                 }
