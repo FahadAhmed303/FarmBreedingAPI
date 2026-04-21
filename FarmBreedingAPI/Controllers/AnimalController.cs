@@ -209,7 +209,9 @@ namespace FarmBreedingAPI.Controllers
                 int rows = await cmd.ExecuteNonQueryAsync();
 
                 if (rows == 0)
-                    return NotFound("Animal not found");
+                {
+                    return BadRequest("UPDATE FAILED");
+                }
 
                 return Ok(new { message = "Updated successfully" });
             }
