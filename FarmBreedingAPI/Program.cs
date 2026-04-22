@@ -4,17 +4,22 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
+builder.Host.ConfigureHostOptions(o =>
+{
+    o.ServicesStartConcurrently = false;
+});
 // Controllers
 builder.Services.AddControllers();
 
 // OpenAPI (keep)
-builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    
 }
 
 // ❌ DO NOT use HTTPS redirect on Render
