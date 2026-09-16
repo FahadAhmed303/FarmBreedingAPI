@@ -13,5 +13,6 @@
         public decimal? Price { get; set; }
         public string? AgentName { get; set; }
         public string? MotherCode { get; set; }
+        public int? MotherNumber { get; set; }
     }
 }

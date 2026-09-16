@@ -44,7 +44,7 @@ namespace FarmBreedingAPI.Controllers
 
                 string sql = @"
                 SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
-                       sourcetype, purchasedate, price, agentname, mothercode
+                       sourcetype, purchasedate, price, agentname, mothercode, ""MotherNumber""
                 FROM ""ArticleInfo01"" 
                 WHERE ""ATCode"" = @ATCode";
 
@@ -67,7 +67,10 @@ namespace FarmBreedingAPI.Controllers
                     purchaseDate = SafeDate(reader["purchasedate"]),
                     price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
                     agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
-                    motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString()
+                    motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString(),
+                    motherNumber = reader["MotherNumber"] == DBNull.Value
+    ? null
+    : (int?)Convert.ToInt32(reader["MotherNumber"])
                 });
             }
             catch (Exception ex)
@@ -266,7 +269,8 @@ namespace FarmBreedingAPI.Controllers
                     purchasedate = @PurchaseDate,
                     price = @Price,
                     agentname = @AgentName,
-                    mothercode = @MotherCode
+                    mothercode = @MotherCode,
+""MotherNumber"" = @MotherNumber
                 WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
@@ -278,6 +282,10 @@ namespace FarmBreedingAPI.Controllers
                 cmd.Parameters.AddWithValue("@PurchaseDate", model.PurchaseDate ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Price", model.Price.HasValue ? model.Price.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@MotherCode", string.IsNullOrEmpty(model.MotherCode) ? (object)DBNull.Value : model.MotherCode);
+                cmd.Parameters.AddWithValue("@MotherNumber",
+    model.MotherNumber.HasValue
+        ? model.MotherNumber.Value
+        : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@AgentName", string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
                 cmd.Parameters.AddWithValue("@SourceType", string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
 
