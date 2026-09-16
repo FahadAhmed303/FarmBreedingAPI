@@ -14,5 +14,6 @@
         public string? AgentName { get; set; }
         public string? MotherCode { get; set; }
         public int? MotherNumber { get; set; }
+        public string? Breed { get; set; }
     }
 }

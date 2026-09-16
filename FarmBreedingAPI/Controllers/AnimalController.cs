@@ -44,9 +44,10 @@ namespace FarmBreedingAPI.Controllers
 
                 string sql = @"
                 SELECT ""ATCode"", ""gender"", ""ATCategoryCode"", ""DOB"",
-                       sourcetype, purchasedate, price, agentname, mothercode, ""MotherNumber""
-                FROM ""ArticleInfo01"" 
-                WHERE ""ATCode"" = @ATCode";
+       sourcetype, purchasedate, price, agentname, mothercode,
+       ""AnimalNo"", ""Breed"", ""MotherNumber""
+FROM ""ArticleInfo01"" 
+WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ATCode", atcode);
@@ -68,6 +69,14 @@ namespace FarmBreedingAPI.Controllers
                     price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
                     agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
                     motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString(),
+                    animalNo = reader["AnimalNo"] == DBNull.Value
+    ? null
+    : (int?)Convert.ToInt32(reader["AnimalNo"]),
+
+                    breed = reader["Breed"] == DBNull.Value
+    ? null
+    : reader["Breed"].ToString(),
+
                     motherNumber = reader["MotherNumber"] == DBNull.Value
     ? null
     : (int?)Convert.ToInt32(reader["MotherNumber"])
@@ -304,7 +313,8 @@ namespace FarmBreedingAPI.Controllers
                     price = @Price,
                     agentname = @AgentName,
                     mothercode = @MotherCode,
-""MotherNumber"" = @MotherNumber
+""MotherNumber"" = @MotherNumber,
+""Breed"" = @Breed
                 WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
@@ -320,6 +330,8 @@ namespace FarmBreedingAPI.Controllers
     model.MotherNumber.HasValue
         ? model.MotherNumber.Value
         : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Breed",
+    (object?)model.Breed ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@AgentName", string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
                 cmd.Parameters.AddWithValue("@SourceType", string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
 
@@ -364,6 +376,92 @@ namespace FarmBreedingAPI.Controllers
                 await cmd.ExecuteNonQueryAsync();
 
                 return Ok(new { message = "Growth saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        // ============================
+        // 6. ANIMAL REPORT
+        // ============================
+        [HttpGet("report")]
+        public async Task<IActionResult> GetAnimalReport()
+        {
+            try
+            {
+                var list = new List<object>();
+
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+
+                string sql = @"
+                SELECT
+                    ""AnimalNo"",
+                    ""ATCode"",
+                    ""gender"",
+                    ""DOB"",
+                    ""Breed"",
+                    sourcetype,
+                    purchasedate,
+                    price,
+                    agentname,
+                    ""MotherNumber"",
+                    mothercode
+                FROM ""ArticleInfo01""
+                ORDER BY ""AnimalNo""";
+
+                await using var cmd = new NpgsqlCommand(sql, conn);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    list.Add(new
+                    {
+                        animalNo = reader["AnimalNo"] == DBNull.Value
+                            ? null
+                            : (int?)Convert.ToInt32(reader["AnimalNo"]),
+
+                        atCode = reader["ATCode"] == DBNull.Value
+                            ? null
+                            : reader["ATCode"].ToString(),
+
+                        gender = reader["gender"] == DBNull.Value
+                            ? null
+                            : reader["gender"].ToString(),
+
+                        dob = SafeDate(reader["DOB"]),
+
+                        breed = reader["Breed"] == DBNull.Value
+                            ? null
+                            : reader["Breed"].ToString(),
+
+                        sourceType = reader["sourcetype"] == DBNull.Value
+                            ? null
+                            : reader["sourcetype"].ToString(),
+
+                        purchaseDate = SafeDate(reader["purchasedate"]),
+
+                        price = reader["price"] == DBNull.Value
+                            ? null
+                            : (decimal?)Convert.ToDecimal(reader["price"]),
+
+                        agentName = reader["agentname"] == DBNull.Value
+                            ? null
+                            : reader["agentname"].ToString(),
+
+                        motherNumber = reader["MotherNumber"] == DBNull.Value
+                            ? null
+                            : (int?)Convert.ToInt32(reader["MotherNumber"]),
+
+                        motherCode = reader["mothercode"] == DBNull.Value
+                            ? null
+                            : reader["mothercode"].ToString()
+                    });
+                }
+
+                return Ok(list);
             }
             catch (Exception ex)
             {
