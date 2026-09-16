@@ -77,6 +77,77 @@ namespace FarmBreedingAPI.Controllers
         }
 
         // ============================
+        // 2. FETCH ATCODE BY ANIMAL NO
+        // ============================
+        [HttpGet("byanimalno/{animalno}")]
+        public async Task<IActionResult> GetAnimalByAnimalNo(int animalno)
+        {
+            try
+            {
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+
+                string sql = @"
+                SELECT ""ATCode""
+                FROM ""ArticleInfo01""
+                WHERE ""AnimalNo"" = @AnimalNo";
+
+                await using var cmd = new NpgsqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@AnimalNo", animalno);
+
+                var result = await cmd.ExecuteScalarAsync();
+
+                if (result == null || result == DBNull.Value)
+                    return NotFound("Animal No not found");
+
+                return Ok(new
+                {
+                    atCode = result.ToString()
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // ============================
+        // 3. FETCH ALL ANIMAL NOS
+        // ============================
+        [HttpGet("animalnos")]
+        public async Task<IActionResult> GetAnimalNos()
+        {
+            try
+            {
+                var list = new List<int>();
+
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+
+                string sql = @"
+                SELECT ""AnimalNo""
+                FROM ""ArticleInfo01""
+                WHERE ""AnimalNo"" IS NOT NULL
+                ORDER BY ""AnimalNo""";
+
+                await using var cmd = new NpgsqlCommand(sql, conn);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    list.Add(Convert.ToInt32(reader["AnimalNo"]));
+                }
+
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // ============================
         // 2. FETCH GROWTH (FIXED)
         // ============================
         [HttpGet("growth/{atcode}")]
