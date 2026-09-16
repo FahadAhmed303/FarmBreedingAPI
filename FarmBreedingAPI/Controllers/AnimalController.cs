@@ -113,7 +113,40 @@ namespace FarmBreedingAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        // ============================
+        // FETCH ANIMAL NO BY ATCODE
+        // ============================
+        [HttpGet("byatcode/{atcode}")]
+        public async Task<IActionResult> GetAnimalNoByATCode(string atcode)
+        {
+            try
+            {
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
 
+                string sql = @"
+        SELECT ""AnimalNo""
+        FROM ""ArticleInfo01""
+        WHERE ""ATCode"" = @ATCode";
+
+                await using var cmd = new NpgsqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@ATCode", atcode);
+
+                var result = await cmd.ExecuteScalarAsync();
+
+                if (result == null || result == DBNull.Value)
+                    return NotFound("Animal No not found");
+
+                return Ok(new
+                {
+                    animalNo = Convert.ToInt32(result)
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         // ============================
         // 3. FETCH ALL ANIMAL NOS
         // ============================
@@ -249,6 +282,7 @@ namespace FarmBreedingAPI.Controllers
                 if (model.SourceType == "PURCHASE")
                 {
                     model.MotherCode = null;
+                    model.MotherNumber = null;
                 }
                 else if (model.SourceType == "BORN")
                 {
