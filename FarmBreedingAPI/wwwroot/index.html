@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Farm Breeding Management</title>
 
     <style>
@@ -66,8 +65,7 @@
             flex-wrap: wrap;
         }
 
-        input,
-        select {
+        input, select {
             padding: 11px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -93,10 +91,6 @@
             button:hover {
                 background: #163b2d;
             }
-
-            /* ==========================================
-           DISABLED SAVE BUTTON
-           ========================================== */
 
             button:disabled {
                 background: #cccccc;
@@ -215,8 +209,7 @@
         }
 
         @media (max-width: 700px) {
-            .animal-grid,
-            .edit-grid {
+            .animal-grid, .edit-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -230,10 +223,8 @@
         <div class="card login-card">
             <h2>Farm Breeding Management</h2>
             <h3>Login</h3>
-
             <input id="loginUsername" type="text" placeholder="User ID" />
             <input id="loginPassword" type="password" placeholder="Password" onkeydown="if(event.key === 'Enter') login();" />
-
             <button class="login-button" onclick="login()">Login</button>
         </div>
     </div>
@@ -246,359 +237,121 @@
         </div>
 
         <div class="container">
-
-            <!-- ==========================================
-                 SEARCH
-                 ========================================== -->
-
+            <!-- SEARCH -->
             <div class="card">
-
                 <h2>Goat Information</h2>
-
                 <div class="search-row">
-
-                    <input id="animalNo"
-                           type="number"
-                           placeholder="Enter Animal No" />
-
-                    <button onclick="loadAnimal()">
-                        Search Goat
-                    </button>
-
-                    <button onclick="printAllGoats()">
-                        PDF - All Goats
-                    </button>
-
+                    <input id="animalNo" type="number" placeholder="Enter Animal No" />
+                    <button onclick="loadAnimal()">Search Goat</button>
+                    <button onclick="printAllGoats()">PDF - All Goats</button>
                 </div>
-
                 <div id="message" class="message"></div>
-
             </div>
 
-
-            <!-- ==========================================
-                 ANIMAL DISPLAY
-                 ========================================== -->
-
-            <div id="animalCard"
-                 class="card"
-                 style="display:none;">
-
+            <!-- ANIMAL DISPLAY -->
+            <div id="animalCard" class="card" style="display:none;">
                 <h2>Animal Details</h2>
-
-                <button class="edit-button"
-                        onclick="editAnimal()">
-                    Edit Goat
-                </button>
-
+                <button class="edit-button" onclick="editAnimal()">Edit Goat</button>
                 <div class="animal-grid">
-
-                    <div class="field">
-                        <label>Animal No</label>
-                        <value id="vAnimalNo">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>AT Code</label>
-                        <value id="vATCode">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Gender</label>
-                        <value id="vGender">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Date of Birth</label>
-                        <value id="vDOB">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Breed</label>
-                        <value id="vBreed">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Mother Number</label>
-                        <value id="vMotherNumber">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Mother Code</label>
-                        <value id="vMotherCode">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Source Type</label>
-                        <value id="vSourceType">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Purchase Date</label>
-                        <value id="vPurchaseDate">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Price</label>
-                        <value id="vPrice">-</value>
-                    </div>
-
-                    <div class="field">
-                        <label>Agent Name</label>
-                        <value id="vAgentName">-</value>
-                    </div>
-
+                    <div class="field"><label>Animal No</label><value id="vAnimalNo">-</value></div>
+                    <div class="field"><label>AT Code</label><value id="vATCode">-</value></div>
+                    <div class="field"><label>Gender</label><value id="vGender">-</value></div>
+                    <div class="field"><label>Date of Birth</label><value id="vDOB">-</value></div>
+                    <div class="field"><label>Breed</label><value id="vBreed">-</value></div>
+                    <div class="field"><label>Mother Number</label><value id="vMotherNumber">-</value></div>
+                    <div class="field"><label>Mother Code</label><value id="vMotherCode">-</value></div>
+                    <div class="field"><label>Source Type</label><value id="vSourceType">-</value></div>
+                    <div class="field"><label>Purchase Date</label><value id="vPurchaseDate">-</value></div>
+                    <div class="field"><label>Price</label><value id="vPrice">-</value></div>
+                    <div class="field"><label>Agent Name</label><value id="vAgentName">-</value></div>
                 </div>
-
             </div>
 
-
-            <!-- ==========================================
-                 EDIT
-                 ========================================== -->
-
-            <div id="editCard"
-                 class="card"
-                 style="display:none;">
-
+            <!-- EDIT -->
+            <div id="editCard" class="card" style="display:none;">
                 <h2>Edit Goat</h2>
-
                 <div class="edit-section-note">
-                    Blue fields can be edited.
-                    Grey fields are read-only or automatically controlled.
+                    Blue fields can be edited. Grey fields are read-only or automatically controlled.
                 </div>
-
                 <div class="edit-grid">
-
-                    <!-- ANIMAL NO -->
-
                     <div class="edit-field">
-
                         <label>Animal No</label>
-
-                        <input id="eAnimalNo"
-                               class="readonly"
-                               readonly />
-
+                        <input id="eAnimalNo" class="readonly" readonly />
                     </div>
-
-
-                    <!-- AT CODE -->
-
                     <div class="edit-field">
-
                         <label>AT Code</label>
-
-                        <input id="eATCode"
-                               class="readonly"
-                               readonly />
-
+                        <input id="eATCode" class="readonly" readonly />
                     </div>
-
-
-                    <!-- GENDER -->
-
                     <div class="edit-field">
-
                         <label>Gender</label>
-
                         <select id="eGender">
-
-                            <option value="">
-                                Select Gender
-                            </option>
-
-                            <option value="male">
-                                male
-                            </option>
-
-                            <option value="female">
-                                female
-                            </option>
-
+                            <option value="">Select Gender</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
                         </select>
-
                     </div>
-
-
-                    <!-- CATEGORY -->
-
                     <div class="edit-field">
-
                         <label>Category</label>
-
                         <select id="eCategory">
-
-                            <option value="">
-                                Loading...
-                            </option>
-
+                            <option value="">Loading...</option>
                         </select>
-
                     </div>
-
-
-                    <!-- DOB -->
-
                     <div class="edit-field">
-
                         <label>Date of Birth</label>
-
-                        <input id="eDOB"
-                               type="date" />
-
+                        <input id="eDOB" type="date" />
                     </div>
-
-
-                    <!-- SOURCE TYPE -->
-
                     <div class="edit-field">
-
                         <label>Source Type</label>
-
-                        <select id="eSourceType"
-                                onchange="sourceTypeChanged()">
-
-                            <option value="">
-                                Select Source
-                            </option>
-
-                            <option value="PURCHASE">
-                                PURCHASE
-                            </option>
-
-                            <option value="BORN">
-                                BORN
-                            </option>
-
+                        <select id="eSourceType" onchange="sourceTypeChanged()">
+                            <option value="">Select Source</option>
+                            <option value="PURCHASE">PURCHASE</option>
+                            <option value="BORN">BORN</option>
                         </select>
-
                     </div>
-
-
-                    <!-- PURCHASE DATE -->
-
                     <div class="edit-field">
-
                         <label>Purchase Date</label>
-
-                        <input id="ePurchaseDate"
-                               type="date" />
-
+                        <input id="ePurchaseDate" type="date" />
                     </div>
-
-
-                    <!-- PRICE -->
-
                     <div class="edit-field">
-
                         <label>Price</label>
-
-                        <input id="ePrice"
-                               type="number"
-                               step="0.01" />
-
+                        <input id="ePrice" type="number" step="0.01" />
                     </div>
-
-
-                    <!-- AGENT -->
-
                     <div class="edit-field">
-
                         <label>Agent Name</label>
-
-                        <input id="eAgentName"
-                               type="text" />
-
+                        <input id="eAgentName" type="text" />
                     </div>
-
-
-                    <!-- BREED -->
-
                     <div class="edit-field">
-
                         <label>Breed</label>
-
                         <select id="eBreed">
-
-                            <option value="">
-                                Loading...
-                            </option>
-
+                            <option value="">Loading...</option>
                         </select>
-
                     </div>
-
-
-                    <!-- MOTHER NUMBER -->
-
                     <div class="edit-field">
-
                         <label>Mother Number</label>
-
-                        <input id="eMotherNumber"
-                               type="number"
-                               oninput="motherNumberChanged()" />
-
+                        <input id="eMotherNumber" type="number" oninput="motherNumberChanged()" />
                     </div>
-
-
-                    <!-- MOTHER CODE -->
-
                     <div class="edit-field">
-
                         <label>Mother Code</label>
-
-                        <input id="eMotherCode"
-                               class="readonly"
-                               readonly />
-
+                        <input id="eMotherCode" class="readonly" readonly />
                     </div>
-
                 </div>
 
-
-                <!-- SAVE -->
-
-                <button id="saveButton"
-                        class="save-button"
-                        onclick="saveAnimal()"
-                        disabled>
-
-                    Save Changes
-
-                </button>
-
-
-                <!-- CANCEL -->
-
-                <button class="cancel-button"
-                        onclick="cancelEdit()">
-
-                    Cancel
-
-                </button>
-
+                <button id="saveButton" class="save-button" onclick="saveAnimal()" disabled>Save Changes</button>
+                <button class="cancel-button" onclick="cancelEdit()">Cancel</button>
             </div>
-
         </div>
     </div>
 
     <script>
-
         let currentAnimal = null;
+        let motherLookupValid = true;
 
         // ==========================================
-        // LOGIN
+        // LOGIN & AUTH
         // ==========================================
-
         async function login() {
-
-            const username =
-                document.getElementById("loginUsername").value.trim();
-
-            const password =
-                document.getElementById("loginPassword").value;
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value;
 
             if (!username || !password) {
                 alert("Please enter User ID and Password.");
@@ -606,20 +359,11 @@
             }
 
             try {
-
-                const response = await fetch(
-                    "/api/auth/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            username: username,
-                            password: password
-                        })
-                    }
-                );
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
 
                 if (!response.ok) {
                     alert("Invalid User ID or Password.");
@@ -627,7 +371,6 @@
                 }
 
                 const result = await response.json();
-
                 if (!result || result.success !== true) {
                     alert("Invalid User ID or Password.");
                     return;
@@ -635,8 +378,7 @@
 
                 document.getElementById("loginPage").style.display = "none";
                 document.getElementById("mainPage").style.display = "block";
-            }
-            catch (error) {
+            } catch (error) {
                 alert("Error connecting to API: " + error.message);
             }
         }
@@ -649,1282 +391,370 @@
         }
 
         // ==========================================
-        // MOTHER VALIDATION STATE
+        // PRINT ALL GOATS REPORT
         // ==========================================
-
-        let motherLookupValid = true;
-
-
-        // ==========================================
-        // SAVE BUTTON CONTROL
-        // ==========================================
-
-        function updateSaveButton() {
-
-            const saveButton =
-                document.getElementById("saveButton");
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-            const motherNumber =
-                document.getElementById("eMotherNumber").value.trim();
-
-            const motherCode =
-                document.getElementById("eMotherCode").value.trim();
-
-
-            // PURCHASE does not require mother
-
-            if (sourceType === "PURCHASE") {
-
-                saveButton.disabled = false;
-
-                return;
-            }
-
-
-            // BORN requires valid mother
-
-            if (sourceType === "BORN") {
-
-                if (
-                    motherNumber &&
-                    motherCode &&
-                    motherLookupValid
-                ) {
-
-                    saveButton.disabled = false;
-
-                }
-                else {
-
-                    saveButton.disabled = true;
-                }
-
-                return;
-            }
-
-
-            // No source selected
-
-            saveButton.disabled = true;
+        function printAllGoats() {
+            window.open("/animal-report.html", "_blank");
         }
 
-
         // ==========================================
-        // PDF - ALL GOATS
+        // SEARCH & LOAD ANIMAL
         // ==========================================
-
-        async function printAllGoats() {
-
-            try {
-
-                const response = await fetch(
-                    "/api/animal/report",
-                    {
-                        headers: {
-                            "app-version": "2"
-                        }
-                    }
-                );
-
-                if (!response.ok) {
-                    alert("Unable to load goat report. HTTP " + response.status);
-                    return;
-                }
-
-                const goats = await response.json();
-
-                if (!Array.isArray(goats) || goats.length === 0) {
-                    alert("No goat data found.");
-                    return;
-                }
-
-                let rows = "";
-
-                goats.forEach(function (goat) {
-
-                    rows += "<tr>";
-                    rows += "<td>" + (goat.animalNo ?? "-") + "</td>";
-                    rows += "<td>" + (goat.atCode ?? "-") + "</td>";
-                    rows += "<td>" + (goat.gender ?? "-") + "</td>";
-                    rows += "<td>" + formatDate(goat.dob) + "</td>";
-                    rows += "<td>" + (goat.breed ?? "-") + "</td>";
-                    rows += "<td>" + (goat.sourceType ?? "-") + "</td>";
-                    rows += "<td>" + formatDate(goat.purchaseDate) + "</td>";
-                    rows += "<td>" + (goat.price ?? "-") + "</td>";
-                    rows += "<td>" + (goat.agentName ?? "-") + "</td>";
-                    rows += "<td>" + (goat.motherNumber ?? "-") + "</td>";
-                    rows += "<td>" + (goat.motherCode ?? "-") + "</td>";
-                    rows += "</tr>";
-                });
-
-                const reportWindow = window.open("", "_blank");
-
-                if (!reportWindow) {
-                    alert("Please allow pop-ups for this website to open the PDF report.");
-                    return;
-                }
-
-                const html =
-                    "<!DOCTYPE html>" +
-                    "<html><head>" +
-                    "<title>All Goats Report</title>" +
-                    "<style>" +
-                    "body{font-family:Arial,sans-serif;margin:20px;}" +
-                    "h1{text-align:center;margin-bottom:5px;}" +
-                    ".date{text-align:center;margin-bottom:20px;color:#555;}" +
-                    "table{width:100%;border-collapse:collapse;font-size:11px;}" +
-                    "th,td{border:1px solid #999;padding:5px;text-align:left;}" +
-                    "th{background:#eeeeee;}" +
-                    "@media print{@page{size:landscape;margin:10mm;}}" +
-                    "</style></head><body>" +
-                    "<h1>Farm Breeding Management</h1>" +
-                    "<div class='date'>All Goats Report - " + new Date().toLocaleDateString() + "</div>" +
-                    "<table><thead><tr>" +
-                    "<th>Animal No</th>" +
-                    "<th>AT Code</th>" +
-                    "<th>Gender</th>" +
-                    "<th>DOB</th>" +
-                    "<th>Breed</th>" +
-                    "<th>Source Type</th>" +
-                    "<th>Purchase Date</th>" +
-                    "<th>Price</th>" +
-                    "<th>Agent Name</th>" +
-                    "<th>Mother No</th>" +
-                    "<th>Mother Code</th>" +
-                    "</tr></thead><tbody>" +
-                    rows +
-                    "</tbody></table></body></html>";
-
-                reportWindow.document.open();
-                reportWindow.document.write(html);
-                reportWindow.document.close();
-
-                reportWindow.onload = function () {
-                    reportWindow.focus();
-                    reportWindow.print();
-                };
-
-            }
-            catch (error) {
-                alert("Error creating goat report: " + error.message);
-            }
-        }
-
-
-        // ==========================================
-        // SEARCH ANIMAL
-        // ==========================================
-
         async function loadAnimal() {
-
-            const animalNo =
-                document.getElementById("animalNo").value;
-
-            const message =
-                document.getElementById("message");
-
-
-            document.getElementById("animalCard").style.display =
-                "none";
-
-            document.getElementById("editCard").style.display =
-                "none";
-
-            message.style.display =
-                "none";
-
+            const animalNo = document.getElementById("animalNo").value;
+            document.getElementById("animalCard").style.display = "none";
+            document.getElementById("editCard").style.display = "none";
+            document.getElementById("message").style.display = "none";
 
             if (!animalNo) {
-
-                showMessage(
-                    "Please enter Animal No.",
-                    true
-                );
-
+                showMessage("Please enter Animal No.", true);
                 return;
             }
 
-
             try {
-
-                const response = await fetch(
-                    `/api/animal/byanimalno/${animalNo}`,
-                    {
-                        headers: {
-                            "app-version": "2"
-                        }
-                    }
-                );
-
+                const response = await fetch(`/api/animal/byanimalno/${animalNo}`, {
+                    headers: { "app-version": "2" }
+                });
 
                 if (!response.ok) {
-
-                    showMessage(
-                        response.status === 404
-                            ? "Animal not found."
-                            : "Unable to load animal. HTTP " +
-                            response.status,
-                        true
-                    );
-
+                    showMessage(response.status === 404 ? "Animal not found." : "Unable to load animal. HTTP " + response.status, true);
                     return;
                 }
 
-
-                const result =
-                    await response.json();
-
-
+                const result = await response.json();
                 if (!result || !result.atCode) {
-
-                    showMessage(
-                        "Animal not found.",
-                        true
-                    );
-
+                    showMessage("Animal not found.", true);
                     return;
                 }
 
-
-                await loadAnimalDetails(
-                    result.atCode
-                );
-
-            }
-            catch (error) {
-
-                showMessage(
-                    "Error connecting to API: " +
-                    error.message,
-                    true
-                );
+                await loadAnimalDetails(result.atCode);
+            } catch (error) {
+                showMessage("Error connecting to API: " + error.message, true);
             }
         }
-
-
-        // ==========================================
-        // LOAD ANIMAL DETAILS
-        // ==========================================
 
         async function loadAnimalDetails(atCode) {
-
-            const response = await fetch(
-                `/api/animal/${encodeURIComponent(atCode)}`,
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
+            const response = await fetch(`/api/animal/${encodeURIComponent(atCode)}`, {
+                headers: { "app-version": "2" }
+            });
 
             if (!response.ok) {
-
-                showMessage(
-                    "Unable to load animal details.",
-                    true
-                );
-
+                showMessage("Unable to load animal details.", true);
                 return;
             }
 
+            const animal = await response.json();
+            currentAnimal = animal;
 
-            const animal =
-                await response.json();
+            document.getElementById("vAnimalNo").textContent = animal.animalNo ?? "-";
+            document.getElementById("vATCode").textContent = animal.atCode ?? "-";
+            document.getElementById("vGender").textContent = animal.gender ?? "-";
+            document.getElementById("vDOB").textContent = formatDate(animal.dob);
+            document.getElementById("vBreed").textContent = animal.breed ?? "-";
+            document.getElementById("vMotherNumber").textContent = animal.motherNumber ?? "-";
+            document.getElementById("vMotherCode").textContent = animal.motherCode ?? "-";
+            document.getElementById("vSourceType").textContent = animal.sourceType ?? "-";
+            document.getElementById("vPurchaseDate").textContent = formatDate(animal.purchaseDate);
+            document.getElementById("vPrice").textContent = animal.price ?? "-";
+            document.getElementById("vAgentName").textContent = animal.agentName ?? "-";
 
-
-            currentAnimal =
-                animal;
-
-
-            document.getElementById("vAnimalNo").textContent =
-                animal.animalNo ?? "-";
-
-
-            document.getElementById("vATCode").textContent =
-                animal.atCode ?? "-";
-
-
-            document.getElementById("vGender").textContent =
-                animal.gender ?? "-";
-
-
-            document.getElementById("vDOB").textContent =
-                formatDate(animal.dob);
-
-
-            document.getElementById("vBreed").textContent =
-                animal.breed ?? "-";
-
-
-            document.getElementById("vMotherNumber").textContent =
-                animal.motherNumber ?? "-";
-
-
-            document.getElementById("vMotherCode").textContent =
-                animal.motherCode ?? "-";
-
-
-            document.getElementById("vSourceType").textContent =
-                animal.sourceType ?? "-";
-
-
-            document.getElementById("vPurchaseDate").textContent =
-                formatDate(animal.purchaseDate);
-
-
-            document.getElementById("vPrice").textContent =
-                animal.price ?? "-";
-
-
-            document.getElementById("vAgentName").textContent =
-                animal.agentName ?? "-";
-
-
-            document.getElementById("animalCard").style.display =
-                "block";
-
-
-            showMessage(
-                "Goat loaded successfully.",
-                false
-            );
+            document.getElementById("animalCard").style.display = "block";
+            showMessage("Goat loaded successfully.", false);
         }
 
-
         // ==========================================
-        // OPEN EDIT MODE
+        // EDIT MODE & LOOKUPS
         // ==========================================
-
         async function editAnimal() {
+            if (!currentAnimal) return;
 
-            if (!currentAnimal) {
-                return;
-            }
+            document.getElementById("eAnimalNo").value = currentAnimal.animalNo ?? "";
+            document.getElementById("eATCode").value = currentAnimal.atCode ?? "";
+            document.getElementById("eGender").value = currentAnimal.gender ?? "";
+            document.getElementById("eDOB").value = toInputDate(currentAnimal.dob);
+            document.getElementById("eSourceType").value = currentAnimal.sourceType ?? "";
+            document.getElementById("ePurchaseDate").value = toInputDate(currentAnimal.purchaseDate);
+            document.getElementById("ePrice").value = currentAnimal.price ?? "";
+            document.getElementById("eAgentName").value = currentAnimal.agentName ?? "";
+            document.getElementById("eMotherNumber").value = currentAnimal.motherNumber ?? "";
+            document.getElementById("eMotherCode").value = currentAnimal.motherCode ?? "";
 
-
-            document.getElementById("eAnimalNo").value =
-                currentAnimal.animalNo ?? "";
-
-
-            document.getElementById("eATCode").value =
-                currentAnimal.atCode ?? "";
-
-
-            document.getElementById("eGender").value =
-                currentAnimal.gender ?? "";
-
-
-            document.getElementById("eDOB").value =
-                toInputDate(currentAnimal.dob);
-
-
-            document.getElementById("eSourceType").value =
-                currentAnimal.sourceType ?? "";
-
-
-            document.getElementById("ePurchaseDate").value =
-                toInputDate(currentAnimal.purchaseDate);
-
-
-            document.getElementById("ePrice").value =
-                currentAnimal.price ?? "";
-
-
-            document.getElementById("eAgentName").value =
-                currentAnimal.agentName ?? "";
-
-
-            document.getElementById("eMotherNumber").value =
-                currentAnimal.motherNumber ?? "";
-
-
-            document.getElementById("eMotherCode").value =
-                currentAnimal.motherCode ?? "";
-
-
-            // Existing mother is considered valid
-            // until user changes Mother Number.
-
-            motherLookupValid =
-                !!currentAnimal.motherCode;
-
+            motherLookupValid = !!currentAnimal.motherCode;
 
             await loadCategories();
-
             await loadBreeds();
 
-
-            document.getElementById("eCategory").value =
-                currentAnimal.atCategoryCode ?? "";
-
-
-            document.getElementById("eBreed").value =
-                currentAnimal.breed ?? "";
-
+            document.getElementById("eCategory").value = currentAnimal.atCategoryCode ?? "";
+            document.getElementById("eBreed").value = currentAnimal.breed ?? "";
 
             sourceTypeChanged();
-
-
-            document.getElementById("editCard").style.display =
-                "block";
-
-
-            document.getElementById("editCard").scrollIntoView({
-                behavior: "smooth"
-            });
-
-
+            document.getElementById("editCard").style.display = "block";
+            document.getElementById("editCard").scrollIntoView({ behavior: "smooth" });
             updateSaveButton();
         }
-
-
-        // ==========================================
-        // LOAD CATEGORIES
-        // ==========================================
 
         async function loadCategories() {
+            const response = await fetch("/api/category", { headers: { "app-version": "2" } });
+            if (!response.ok) throw new Error("Unable to load categories.");
 
-            const response = await fetch(
-                "/api/category",
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load categories."
-                );
-            }
-
-
-            const categories =
-                await response.json();
-
-
-            const select =
-                document.getElementById("eCategory");
-
-
-            select.innerHTML =
-                '<option value="">Select Category</option>';
-
-
+            const categories = await response.json();
+            const select = document.getElementById("eCategory");
+            select.innerHTML = '<option value="">Select Category</option>';
             categories.forEach(category => {
-
-                const option =
-                    document.createElement("option");
-
-
-                option.value =
-                    category.atCategoryCode;
-
-
-                option.textContent =
-                    category.atCategoryName;
-
-
+                const option = document.createElement("option");
+                option.value = category.atCategoryCode;
+                option.textContent = category.atCategoryName;
                 select.appendChild(option);
-
             });
         }
-
-
-        // ==========================================
-        // LOAD BREEDS
-        // ==========================================
 
         async function loadBreeds() {
+            const response = await fetch("/api/breed", { headers: { "app-version": "2" } });
+            if (!response.ok) throw new Error("Unable to load breeds.");
 
-            const response = await fetch(
-                "/api/breed",
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load breeds."
-                );
-            }
-
-
-            const breeds =
-                await response.json();
-
-
-            const select =
-                document.getElementById("eBreed");
-
-
-            select.innerHTML =
-                '<option value="">Select Breed</option>';
-
-
+            const breeds = await response.json();
+            const select = document.getElementById("eBreed");
+            select.innerHTML = '<option value="">Select Breed</option>';
             breeds.forEach(breed => {
-
-                const option =
-                    document.createElement("option");
-
-
-                option.value =
-                    breed.breedName;
-
-
-                option.textContent =
-                    breed.breedName;
-
-
+                const option = document.createElement("option");
+                option.value = breed.breedName;
+                option.textContent = breed.breedName;
                 select.appendChild(option);
-
             });
         }
 
-
-        // ==========================================
-        // SOURCE TYPE
-        // ==========================================
-
         function sourceTypeChanged() {
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-
-            const purchaseDate =
-                document.getElementById("ePurchaseDate");
-
-
-            const price =
-                document.getElementById("ePrice");
-
-
-            const agentName =
-                document.getElementById("eAgentName");
-
-
-            const motherNumber =
-                document.getElementById("eMotherNumber");
-
-
-            const motherCode =
-                document.getElementById("eMotherCode");
-
+            const sourceType = document.getElementById("eSourceType").value;
+            const purchaseDate = document.getElementById("ePurchaseDate");
+            const price = document.getElementById("ePrice");
+            const agentName = document.getElementById("eAgentName");
+            const motherNumber = document.getElementById("eMotherNumber");
+            const motherCode = document.getElementById("eMotherCode");
 
             if (sourceType === "PURCHASE") {
-
-                purchaseDate.disabled =
-                    false;
-
-                price.disabled =
-                    false;
-
-                agentName.disabled =
-                    false;
-
-
-                motherNumber.value =
-                    "";
-
-                motherCode.value =
-                    "";
-
-
-                motherNumber.disabled =
-                    true;
-
-                motherCode.disabled =
-                    true;
-
-
-                motherLookupValid =
-                    true;
+                purchaseDate.disabled = false;
+                price.disabled = false;
+                agentName.disabled = false;
+                motherNumber.value = "";
+                motherCode.value = "";
+                motherNumber.disabled = true;
+                motherCode.disabled = true;
+                motherLookupValid = true;
+            } else if (sourceType === "BORN") {
+                purchaseDate.value = "";
+                price.value = "";
+                agentName.value = "";
+                purchaseDate.disabled = true;
+                price.disabled = true;
+                agentName.disabled = true;
+                motherNumber.disabled = false;
+                motherCode.disabled = true;
+                motherLookupValid = !!motherNumber.value && !!motherCode.value;
+            } else {
+                purchaseDate.disabled = false;
+                price.disabled = false;
+                agentName.disabled = false;
+                motherNumber.disabled = false;
+                motherCode.disabled = false;
+                motherLookupValid = true;
             }
-
-            else if (sourceType === "BORN") {
-
-                purchaseDate.value =
-                    "";
-
-                price.value =
-                    "";
-
-                agentName.value =
-                    "";
-
-
-                purchaseDate.disabled =
-                    true;
-
-                price.disabled =
-                    true;
-
-                agentName.disabled =
-                    true;
-
-
-                motherNumber.disabled =
-                    false;
-
-                motherCode.disabled =
-                    true;
-
-
-                motherLookupValid =
-                    !!motherNumber.value &&
-                    !!motherCode.value;
-            }
-
-            else {
-
-                purchaseDate.disabled =
-                    false;
-
-                price.disabled =
-                    false;
-
-                agentName.disabled =
-                    false;
-
-
-                motherNumber.disabled =
-                    false;
-
-                motherCode.disabled =
-                    false;
-
-
-                motherLookupValid =
-                    true;
-            }
-
-
-            document.getElementById("eGender").disabled =
-                false;
-
-            document.getElementById("eCategory").disabled =
-                false;
-
-            document.getElementById("eDOB").disabled =
-                false;
-
-            document.getElementById("eBreed").disabled =
-                false;
-
 
             updateSaveButton();
         }
-
-
-        // ==========================================
-        // MOTHER NUMBER → MOTHER CODE
-        // ==========================================
 
         async function motherNumberChanged() {
-
-            const input =
-                document.getElementById("eMotherNumber");
-
-            const motherCode =
-                document.getElementById("eMotherCode");
-
-
-            const motherNumber =
-                input.value.trim();
-
-
-            // ==========================================
-            // EMPTY
-            // ==========================================
+            const input = document.getElementById("eMotherNumber");
+            const motherCode = document.getElementById("eMotherCode");
+            const motherNumber = input.value.trim();
 
             if (!motherNumber) {
-
                 motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
+                motherLookupValid = false;
                 updateSaveButton();
-
-                document.getElementById("message").style.display =
-                    "none";
-
                 return;
             }
 
-
-            // ==========================================
-            // OWN ANIMAL
-            // ==========================================
-
-            if (
-                currentAnimal &&
-                Number(motherNumber) ===
-                Number(currentAnimal.animalNo)
-            ) {
-
+            if (currentAnimal && Number(motherNumber) === Number(currentAnimal.animalNo)) {
                 motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
+                motherLookupValid = false;
                 updateSaveButton();
-
-                showMessage(
-                    "An animal cannot be its own mother.",
-                    true
-                );
-
+                showMessage("An animal cannot be its own mother.", true);
                 return;
             }
 
-
-            // ==========================================
-            // CURRENT REQUEST
-            // ==========================================
-
-            const requestedMotherNumber =
-                motherNumber;
-
-
-            // Disable Save while checking
-
-            motherLookupValid =
-                false;
-
+            const requestedMotherNumber = motherNumber;
+            motherLookupValid = false;
             updateSaveButton();
 
-
             try {
+                const response = await fetch(`/api/animal/byanimalno/${encodeURIComponent(requestedMotherNumber)}`, {
+                    headers: { "app-version": "2" }
+                });
 
-                // ======================================
-                // FIND MOTHER AT CODE
-                // ======================================
-
-                const response = await fetch(
-                    `/api/animal/byanimalno/${encodeURIComponent(requestedMotherNumber)}`,
-                    {
-                        headers: {
-                            "app-version": "2"
-                        }
-                    }
-                );
-
-
-                // User changed number while waiting
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                // ======================================
-                // NOT FOUND
-                // ======================================
+                if (document.getElementById("eMotherNumber").value.trim() !== requestedMotherNumber) return;
 
                 if (!response.ok) {
-
                     motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
+                    motherLookupValid = false;
                     updateSaveButton();
-
-                    showMessage(
-                        "Mother Animal No not found.",
-                        true
-                    );
-
+                    showMessage("Mother Animal No not found.", true);
                     return;
                 }
 
-
-                const result =
-                    await response.json();
-
-
-                if (
-                    !result ||
-                    !result.atCode
-                ) {
-
+                const result = await response.json();
+                if (!result || !result.atCode) {
                     motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
+                    motherLookupValid = false;
                     updateSaveButton();
-
-                    showMessage(
-                        "Mother Animal No not found.",
-                        true
-                    );
-
+                    showMessage("Mother Animal No not found.", true);
                     return;
                 }
 
+                const motherResponse = await fetch(`/api/animal/${encodeURIComponent(result.atCode)}`, {
+                    headers: { "app-version": "2" }
+                });
 
-                // ======================================
-                // GET MOTHER DETAILS
-                // ======================================
-
-                const motherResponse =
-                    await fetch(
-                        `/api/animal/${encodeURIComponent(result.atCode)}`,
-                        {
-                            headers: {
-                                "app-version": "2"
-                            }
-                        }
-                    );
-
-
-                // User changed number while waiting
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
+                if (document.getElementById("eMotherNumber").value.trim() !== requestedMotherNumber) return;
 
                 if (!motherResponse.ok) {
-
                     motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
+                    motherLookupValid = false;
                     updateSaveButton();
-
-                    showMessage(
-                        "Unable to verify mother.",
-                        true
-                    );
-
+                    showMessage("Unable to verify mother.", true);
                     return;
                 }
 
-
-                const mother =
-                    await motherResponse.json();
-
-
-                // ======================================
-                // MUST BE FEMALE
-                // ======================================
-
-                if (
-                    !mother.gender ||
-                    mother.gender.toLowerCase() !== "female"
-                ) {
-
+                const mother = await motherResponse.json();
+                if (!mother.gender || mother.gender.toLowerCase() !== "female") {
                     motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
+                    motherLookupValid = false;
                     updateSaveButton();
-
-                    showMessage(
-                        "Selected Mother Animal No is not female.",
-                        true
-                    );
-
+                    showMessage("Selected Mother Animal No is not female.", true);
                     return;
                 }
 
-
-                // ======================================
-                // FINAL INPUT CHECK
-                // ======================================
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                // ======================================
-                // VALID MOTHER
-                // ======================================
-
-                motherCode.value =
-                    result.atCode;
-
-
-                motherLookupValid =
-                    true;
-
-
+                motherCode.value = result.atCode;
+                motherLookupValid = true;
                 updateSaveButton();
-
-
-                document.getElementById("message").style.display =
-                    "none";
-
-            }
-            catch (error) {
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
+            } catch (error) {
+                if (document.getElementById("eMotherNumber").value.trim() !== requestedMotherNumber) return;
                 motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
+                motherLookupValid = false;
                 updateSaveButton();
-
-
-                showMessage(
-                    "Error verifying mother: " +
-                    error.message,
-                    true
-                );
+                showMessage("Error verifying mother: " + error.message, true);
             }
         }
 
-
         // ==========================================
-        // SAVE ANIMAL
+        // SAVE & VALIDATION
         // ==========================================
+        function updateSaveButton() {
+            const saveButton = document.getElementById("saveButton");
+            const sourceType = document.getElementById("eSourceType").value;
+            const motherNumber = document.getElementById("eMotherNumber").value.trim();
+            const motherCode = document.getElementById("eMotherCode").value.trim();
 
-        async function saveAnimal() {
-
-            if (!currentAnimal) {
+            if (sourceType === "PURCHASE") {
+                saveButton.disabled = false;
                 return;
             }
-
-
-            const saveButton =
-                document.getElementById("saveButton");
-
-
-            // Extra protection
-
-            if (saveButton.disabled) {
-
-                showMessage(
-                    "Please correct the validation errors before saving.",
-                    true
-                );
-
-                return;
-            }
-
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-
-            const motherNumber =
-                document.getElementById("eMotherNumber").value.trim();
-
-
-            const motherCode =
-                document.getElementById("eMotherCode").value.trim();
-
-
-            // ==========================================
-            // BORN VALIDATION
-            // ==========================================
 
             if (sourceType === "BORN") {
+                saveButton.disabled = !(motherNumber && motherCode && motherLookupValid);
+                return;
+            }
 
-                if (!motherNumber) {
+            saveButton.disabled = false;
+        }
 
-                    motherLookupValid =
-                        false;
+        async function saveAnimal() {
+            if (!currentAnimal) return;
 
-                    updateSaveButton();
+            const saveButton = document.getElementById("saveButton");
+            if (saveButton.disabled) {
+                showMessage("Please correct validation errors before saving.", true);
+                return;
+            }
 
-                    showMessage(
-                        "Please enter Mother Animal No.",
-                        true
-                    );
+            const sourceType = document.getElementById("eSourceType").value;
+            const motherNumber = document.getElementById("eMotherNumber").value.trim();
+            const motherCode = document.getElementById("eMotherCode").value.trim();
 
-                    return;
-                }
-
-
-                if (
-                    Number(motherNumber) ===
-                    Number(currentAnimal.animalNo)
-                ) {
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "An animal cannot be its own mother.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !motherLookupValid ||
-                    !motherCode
-                ) {
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Please enter a valid female Mother Animal No.",
-                        true
-                    );
-
+            if (sourceType === "BORN") {
+                if (!motherNumber || !motherCode || !motherLookupValid) {
+                    showMessage("Please enter a valid female Mother Animal No.", true);
                     return;
                 }
             }
-
-
-            // ==========================================
-            // MODEL
-            // ==========================================
 
             const model = {
-
-                ATCode:
-                    document.getElementById("eATCode").value,
-
-                gender:
-                    document.getElementById("eGender").value,
-
-                ATCategoryCode:
-                    document.getElementById("eCategory").value,
-
-                DOB:
-                    document.getElementById("eDOB").value ||
-                    null,
-
-                SourceType:
-                    sourceType ||
-                    null,
-
-                PurchaseDate:
-                    document.getElementById("ePurchaseDate").value ||
-                    null,
-
-                Price:
-                    document.getElementById("ePrice").value
-                        ? Number(
-                            document.getElementById("ePrice").value
-                        )
-                        : null,
-
-                AgentName:
-                    document.getElementById("eAgentName").value ||
-                    null,
-
-                MotherCode:
-                    document.getElementById("eMotherCode").value ||
-                    null,
-
-                MotherNumber:
-                    document.getElementById("eMotherNumber").value
-                        ? Number(
-                            document.getElementById("eMotherNumber").value
-                        )
-                        : null,
-
-                Breed:
-                    document.getElementById("eBreed").value ||
-                    null
+                ATCode: document.getElementById("eATCode").value,
+                gender: document.getElementById("eGender").value,
+                ATCategoryCode: document.getElementById("eCategory").value,
+                DOB: document.getElementById("eDOB").value || null,
+                SourceType: sourceType || null,
+                PurchaseDate: document.getElementById("ePurchaseDate").value || null,
+                Price: document.getElementById("ePrice").value ? Number(document.getElementById("ePrice").value) : null,
+                AgentName: document.getElementById("eAgentName").value || null,
+                MotherCode: motherCode || null,
+                MotherNumber: motherNumber ? Number(motherNumber) : null,
+                Breed: document.getElementById("eBreed").value || null
             };
 
-
-            // ==========================================
-            // SAVE
-            // ==========================================
-
             try {
-
-                const response = await fetch(
-                    "/api/animal/save",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json",
-                            "app-version": "2"
-                        },
-
-                        body: JSON.stringify(model)
-                    }
-                );
-
+                const response = await fetch("/api/animal/save", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "app-version": "2"
+                    },
+                    body: JSON.stringify(model)
+                });
 
                 if (!response.ok) {
-
-                    const errorText =
-                        await response.text();
-
-
-                    showMessage(
-                        "Save failed: " +
-                        errorText,
-                        true
-                    );
-
+                    const errorText = await response.text();
+                    showMessage("Save failed: " + errorText, true);
                     return;
                 }
 
-
-                showMessage(
-                    "Goat updated successfully.",
-                    false
-                );
-
-
-                await loadAnimalDetails(
-                    model.ATCode
-                );
-
-
-                document.getElementById("editCard").style.display =
-                    "none";
-
-            }
-            catch (error) {
-
-                showMessage(
-                    "Error saving goat: " +
-                    error.message,
-                    true
-                );
+                showMessage("Goat updated successfully.", false);
+                await loadAnimalDetails(model.ATCode);
+                document.getElementById("editCard").style.display = "none";
+            } catch (error) {
+                showMessage("Error saving goat: " + error.message, true);
             }
         }
-
-
-        // ==========================================
-        // CANCEL
-        // ==========================================
 
         function cancelEdit() {
-
-            document.getElementById("editCard").style.display =
-                "none";
+            document.getElementById("editCard").style.display = "none";
         }
 
-
         // ==========================================
-        // DATE FOR INPUT
+        // HELPERS
         // ==========================================
-
         function toInputDate(value) {
-
-            if (!value) {
-                return "";
-            }
-
-            return value.substring(0, 10);
+            return value ? value.substring(0, 10) : "";
         }
-
-
-        // ==========================================
-        // DISPLAY DATE
-        // ==========================================
 
         function formatDate(value) {
-
-            if (!value) {
-                return "-";
-            }
-
-
-            const date =
-                new Date(value);
-
-
-            if (isNaN(date.getTime())) {
-                return "-";
-            }
-
-
-            const day =
-                String(date.getDate()).padStart(2, "0");
-
-
-            const months = [
-                "Jan", "Feb", "Mar", "Apr",
-                "May", "Jun", "Jul", "Aug",
-                "Sep", "Oct", "Nov", "Dec"
-            ];
-
-
-            const month =
-                months[date.getMonth()];
-
-
-            const year =
-                date.getFullYear();
-
-
-            return `${day}/${month}/${year}`;
+            if (!value) return "-";
+            const date = new Date(value);
+            if (isNaN(date.getTime())) return "-";
+            const day = String(date.getDate()).padStart(2, "0");
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return `${day}/${months[date.getMonth()]}/${date.getFullYear()}`;
         }
 
-
-        // ==========================================
-        // MESSAGE
-        // ==========================================
-
-        function showMessage(text, error) {
-
-            // REAL POPUP ALERT
-            if (error) {
+        function showMessage(text, isError) {
+            if (isError) {
                 alert(text);
                 return;
             }
-
-            // Keep successful messages on the page
-            const message =
-                document.getElementById("message");
-
-            message.textContent =
-                text;
-
-            message.className =
-                "message success";
-
-            message.style.display =
-                "block";
+            const message = document.getElementById("message");
+            message.textContent = text;
+            message.className = "message success";
+            message.style.display = "block";
         }
-
     </script>
-
 </body>
 </html>

@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Farm Breeding Management - All Goats</title>
+    <style>
+        body {
+            font-family: Arial,sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+            color: #222
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 15px
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px
+        }
+
+        input, select, button {
+            padding: 8px 10px;
+            font-size: 14px
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .table-wrap {
+            overflow: auto;
+            max-height: calc(100vh - 180px);
+            border: 1px solid #ccc
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+            background: white
+        }
+
+        th, td {
+            border: 1px solid #bbb;
+            padding: 7px;
+            white-space: nowrap;
+            text-align: left
+        }
+
+        th {
+            background: #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1
+        }
+
+        #status {
+            margin: 10px 0;
+            font-weight: bold
+        }
+
+        @media print {
+            body {
+                background: white;
+                margin: 0
+            }
+
+            .container {
+                padding: 0
+            }
+
+            .toolbar {
+                display: none
+            }
+
+            .table-wrap {
+                max-height: none;
+                overflow: visible;
+                border: 0
+            }
+
+            table {
+                font-size: 8px
+            }
+
+            th {
+                position: static
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Farm Breeding Management - All Goats</h1>
+        <div class="toolbar">
+            <input id="search" type="text" placeholder="Search...">
+            <select id="department"><option value="">All Departments</option></select>
+            <select id="gender"><option value="">All Genders</option></select>
+            <button onclick="window.print()">Print</button>
+        </div>
+        <div id="status">Loading...</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Animal No</th>
+                        <th>AT Code</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Breed</th>
+                        <th>Source</th>
+                        <th>Purchase Date</th>
+                        <th>Price</th>
+                        <th>Agent</th>
+                        <th>Mother No</th>
+                        <th>Mother Code</th>
+                        <th>Weight</th>
+                        <th>Height</th>
+                        <th>Width</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>let goats=[];
+function fmt(v){if(v===null||v===undefined||v==="")return "-";return String(v).split('T')[0];}
+function esc(v){if(v===null||v===undefined||v==="")return "-";return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function render(){
+ const q=document.getElementById('search').value.toLowerCase();
+ const d=document.getElementById('department').value;
+ const g=document.getElementById('gender').value;
+ const filtered=goats.filter(a=>{
+   const text=Object.values(a).join(' ').toLowerCase();
+   return (!q||text.includes(q))&&(!d||String(a.departmentNo||'')===d)&&(!g||String(a.gender||'')===g);
+ });
+ document.getElementById('rows').innerHTML=filtered.map(a=>`<tr>
+<td>${esc(a.animalNo)}</td><td>${esc(a.atCode)}</td><td>${esc(a.gender)}</td><td>${esc(fmt(a.dob))}</td><td>${esc(a.breed)}</td><td>${esc(a.sourceType)}</td><td>${esc(fmt(a.purchaseDate))}</td><td>${esc(a.price)}</td><td>${esc(a.agentName)}</td><td>${esc(a.motherNumber)}</td><td>${esc(a.motherCode)}</td><td>${esc(a.weight)}</td><td>${esc(a.height)}</td><td>${esc(a.width)}</td><td>${esc(a.departmentNo)}</td>
+</tr>`).join('');
+ document.getElementById('status').textContent=filtered.length+' goat(s)';
+}
+async function load(){
+ try{
+  const r=await fetch('/api/animal/report',{headers:{'app-version':'2'}});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  goats=await r.json();
+  const ds=[...new Set(goats.map(a=>a.departmentNo).filter(v=>v!==null&&v!==undefined))].sort((a,b)=>a-b);
+  const gs=[...new Set(goats.map(a=>a.gender).filter(Boolean))].sort();
+  document.getElementById('department').innerHTML='<option value="">All Departments</option>'+ds.map(v=>`<option value="${esc(v)}">Department ${esc(v)}</option>`).join('');
+  document.getElementById('gender').innerHTML='<option value="">All Genders</option>'+gs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  render();
+ }catch(e){document.getElementById('status').textContent='Error loading report: '+e.message;}
+}
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('department').addEventListener('change',render);
+document.getElementById('gender').addEventListener('change',render);
+load();</script>
+</body>
+</html>
