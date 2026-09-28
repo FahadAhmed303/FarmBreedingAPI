@@ -1,26 +1,50 @@
 [
   {
-    "ContainingType": "Program\u002B\u003C\u003Ec",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_0",
-    "RelativePath": "",
-    "HttpMethod": "GET",
-    "IsController": false,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "GetAnimal",
     "RelativePath": "api/Animal/{atcode}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "atcode",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetAnimalNos",
+    "RelativePath": "api/Animal/animalnos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetAnimalByAnimalNo",
+    "RelativePath": "api/Animal/byanimalno/{animalno}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "animalno",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetAnimalNoByATCode",
+    "RelativePath": "api/Animal/byatcode/{atcode}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -83,6 +107,16 @@
   },
   {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetAnimalReport",
+    "RelativePath": "api/Animal/report",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "SaveAnimal",
     "RelativePath": "api/Animal/save",
     "HttpMethod": "POST",
@@ -95,6 +129,32 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Models.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.BreedController",
+    "Method": "GetBreeds",
+    "RelativePath": "api/Breed",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -180,5 +240,23 @@
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Program\u002B\u003C\u003Ec",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_2",
+    "RelativePath": "health",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

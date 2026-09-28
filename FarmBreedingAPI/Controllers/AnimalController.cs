@@ -64,22 +64,35 @@ WHERE ""ATCode"" = @ATCode";
                     atCategoryCode = reader["ATCategoryCode"]?.ToString(),
                     dob = SafeDate(reader["DOB"]),
 
-                    sourceType = reader["sourcetype"] == DBNull.Value ? null : reader["sourcetype"].ToString(),
+                    sourceType = reader["sourcetype"] == DBNull.Value
+                        ? null
+                        : reader["sourcetype"].ToString(),
+
                     purchaseDate = SafeDate(reader["purchasedate"]),
-                    price = reader["price"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["price"]),
-                    agentName = reader["agentname"] == DBNull.Value ? null : reader["agentname"].ToString(),
-                    motherCode = reader["mothercode"] == DBNull.Value ? null : reader["mothercode"].ToString(),
+
+                    price = reader["price"] == DBNull.Value
+                        ? null
+                        : (decimal?)Convert.ToDecimal(reader["price"]),
+
+                    agentName = reader["agentname"] == DBNull.Value
+                        ? null
+                        : reader["agentname"].ToString(),
+
+                    motherCode = reader["mothercode"] == DBNull.Value
+                        ? null
+                        : reader["mothercode"].ToString(),
+
                     animalNo = reader["AnimalNo"] == DBNull.Value
-    ? null
-    : (int?)Convert.ToInt32(reader["AnimalNo"]),
+                        ? null
+                        : (int?)Convert.ToInt32(reader["AnimalNo"]),
 
                     breed = reader["Breed"] == DBNull.Value
-    ? null
-    : reader["Breed"].ToString(),
+                        ? null
+                        : reader["Breed"].ToString(),
 
                     motherNumber = reader["MotherNumber"] == DBNull.Value
-    ? null
-    : (int?)Convert.ToInt32(reader["MotherNumber"])
+                        ? null
+                        : (int?)Convert.ToInt32(reader["MotherNumber"])
                 });
             }
             catch (Exception ex)
@@ -122,6 +135,7 @@ WHERE ""ATCode"" = @ATCode";
                 return BadRequest(ex.Message);
             }
         }
+
         // ============================
         // FETCH ANIMAL NO BY ATCODE
         // ============================
@@ -156,6 +170,7 @@ WHERE ""ATCode"" = @ATCode";
                 return BadRequest(ex.Message);
             }
         }
+
         // ============================
         // 3. FETCH ALL ANIMAL NOS
         // ============================
@@ -221,10 +236,20 @@ WHERE ""ATCode"" = @ATCode";
                         list.Add(new
                         {
                             atCode = reader["ATCode"].ToString(),
-                            weight = reader["Weight"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Weight"]),
-                            height = reader["Height"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Height"]),
-                            width = reader["Width"] == DBNull.Value ? 0 : Convert.ToDouble(reader["Width"]),
-                            recordDate = SafeDate(reader["RecordDate"])   // 🔥 FIX HERE
+
+                            weight = reader["Weight"] == DBNull.Value
+                                ? 0
+                                : Convert.ToDouble(reader["Weight"]),
+
+                            height = reader["Height"] == DBNull.Value
+                                ? 0
+                                : Convert.ToDouble(reader["Height"]),
+
+                            width = reader["Width"] == DBNull.Value
+                                ? 0
+                                : Convert.ToDouble(reader["Width"]),
+
+                            recordDate = SafeDate(reader["RecordDate"])
                         });
                     }
                 }
@@ -313,34 +338,75 @@ WHERE ""ATCode"" = @ATCode";
                     price = @Price,
                     agentname = @AgentName,
                     mothercode = @MotherCode,
-""MotherNumber"" = @MotherNumber,
-""Breed"" = @Breed
+                    ""MotherNumber"" = @MotherNumber,
+                    ""Breed"" = @Breed
                 WHERE ""ATCode"" = @ATCode";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@ATCode", model.ATCode ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@gender", model.gender ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@ATCategoryCode", model.ATCategoryCode ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@DOB", model.DOB ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@PurchaseDate", model.PurchaseDate ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Price", model.Price.HasValue ? model.Price.Value : (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@MotherCode", string.IsNullOrEmpty(model.MotherCode) ? (object)DBNull.Value : model.MotherCode);
-                cmd.Parameters.AddWithValue("@MotherNumber",
-    model.MotherNumber.HasValue
-        ? model.MotherNumber.Value
-        : (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Breed",
-    (object?)model.Breed ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@AgentName", string.IsNullOrEmpty(model.AgentName) ? (object)DBNull.Value : model.AgentName);
-                cmd.Parameters.AddWithValue("@SourceType", string.IsNullOrEmpty(model.SourceType) ? (object)DBNull.Value : model.SourceType);
+                cmd.Parameters.AddWithValue(
+                    "@ATCode",
+                    model.ATCode ?? (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@gender",
+                    model.gender ?? (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@ATCategoryCode",
+                    model.ATCategoryCode ?? (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@DOB",
+                    model.DOB ?? (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@PurchaseDate",
+                    model.PurchaseDate ?? (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@Price",
+                    model.Price.HasValue
+                        ? model.Price.Value
+                        : (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@MotherCode",
+                    string.IsNullOrEmpty(model.MotherCode)
+                        ? (object)DBNull.Value
+                        : model.MotherCode);
+
+                cmd.Parameters.AddWithValue(
+                    "@MotherNumber",
+                    model.MotherNumber.HasValue
+                        ? model.MotherNumber.Value
+                        : (object)DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@Breed",
+                    (object?)model.Breed ?? DBNull.Value);
+
+                cmd.Parameters.AddWithValue(
+                    "@AgentName",
+                    string.IsNullOrEmpty(model.AgentName)
+                        ? (object)DBNull.Value
+                        : model.AgentName);
+
+                cmd.Parameters.AddWithValue(
+                    "@SourceType",
+                    string.IsNullOrEmpty(model.SourceType)
+                        ? (object)DBNull.Value
+                        : model.SourceType);
 
                 int rows = await cmd.ExecuteNonQueryAsync();
 
                 if (rows == 0)
                     return BadRequest("UPDATE FAILED");
 
-                return Ok(new { message = "Updated successfully" });
+                return Ok(new
+                {
+                    message = "Updated successfully"
+                });
             }
             catch (Exception ex)
             {
@@ -375,13 +441,17 @@ WHERE ""ATCode"" = @ATCode";
 
                 await cmd.ExecuteNonQueryAsync();
 
-                return Ok(new { message = "Growth saved successfully" });
+                return Ok(new
+                {
+                    message = "Growth saved successfully"
+                });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
         // ============================
         // 6. ANIMAL REPORT
         // ============================
@@ -396,20 +466,52 @@ WHERE ""ATCode"" = @ATCode";
                 await conn.OpenAsync();
 
                 string sql = @"
-                SELECT
-                    ""AnimalNo"",
-                    ""ATCode"",
-                    ""gender"",
-                    ""DOB"",
-                    ""Breed"",
-                    sourcetype,
-                    purchasedate,
-                    price,
-                    agentname,
-                    ""MotherNumber"",
-                    mothercode
-                FROM ""ArticleInfo01""
-                ORDER BY ""AnimalNo""";
+                    SELECT
+                        a.""AnimalNo"",
+                        a.""ATCode"",
+                        a.""gender"",
+                        a.""DOB"",
+                        a.""Breed"",
+                        a.sourcetype,
+                        a.purchasedate,
+                        a.price,
+                        a.agentname,
+                        a.""MotherNumber"",
+                        a.mothercode,
+
+                        g.""RecordDate"",
+                        g.""Weight"",
+                        g.""Height"",
+                        g.""Width"",
+
+                        d.""DepartmentID"" AS ""DepartmentNo""
+
+                    FROM ""ArticleInfo01"" a
+
+                    LEFT JOIN LATERAL
+                    (
+                        SELECT
+                            ""RecordDate"",
+                            ""Weight"",
+                            ""Height"",
+                            ""Width""
+                        FROM ""ArticleInfo03""
+                        WHERE ""ATCode"" = a.""ATCode""
+                        ORDER BY ""RecordDate"" DESC, recordid DESC
+                        LIMIT 1
+                    ) g ON true
+
+                    LEFT JOIN LATERAL
+                    (
+                        SELECT
+                            ""DepartmentID""
+                        FROM ""AnimalDepartment""
+                        WHERE ""ATCode"" = a.""ATCode""
+                        ORDER BY ""EffectiveDate"" DESC, ""AssignmentID"" DESC
+                        LIMIT 1
+                    ) d ON true
+
+                    ORDER BY a.""AnimalNo""";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
 
@@ -419,6 +521,10 @@ WHERE ""ATCode"" = @ATCode";
                 {
                     list.Add(new
                     {
+                        // ============================
+                        // ORIGINAL 11 FIELDS
+                        // ============================
+
                         animalNo = reader["AnimalNo"] == DBNull.Value
                             ? null
                             : (int?)Convert.ToInt32(reader["AnimalNo"]),
@@ -457,7 +563,33 @@ WHERE ""ATCode"" = @ATCode";
 
                         motherCode = reader["mothercode"] == DBNull.Value
                             ? null
-                            : reader["mothercode"].ToString()
+                            : reader["mothercode"].ToString(),
+
+                        // ============================
+                        // LATEST GROWTH
+                        // ============================
+
+                        recordDate = SafeDate(reader["RecordDate"]),
+
+                        weight = reader["Weight"] == DBNull.Value
+                            ? null
+                            : (decimal?)Convert.ToDecimal(reader["Weight"]),
+
+                        height = reader["Height"] == DBNull.Value
+                            ? null
+                            : (decimal?)Convert.ToDecimal(reader["Height"]),
+
+                        width = reader["Width"] == DBNull.Value
+                            ? null
+                            : (decimal?)Convert.ToDecimal(reader["Width"]),
+
+                        // ============================
+                        // LATEST DEPARTMENT
+                        // ============================
+
+                        departmentNo = reader["DepartmentNo"] == DBNull.Value
+                            ? null
+                            : (int?)Convert.ToInt32(reader["DepartmentNo"])
                     });
                 }
 

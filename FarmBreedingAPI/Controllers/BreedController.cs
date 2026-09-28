@@ -7,15 +7,8 @@ namespace FarmBreedingAPI.Controllers
     [Route("api/[controller]")]
     public class BreedController : ControllerBase
     {
-        private readonly string connectionString;
-
-        public BreedController(IConfiguration configuration)
-        {
-            connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException(
-                    "DefaultConnection is not configured.");
-        }
-
+        private readonly string connectionString =
+    "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
         [HttpGet]
         public async Task<IActionResult> GetBreeds()
         {

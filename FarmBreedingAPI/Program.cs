@@ -21,6 +21,8 @@ if (app.Environment.IsDevelopment())
 {
     
 }
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // ❌ DO NOT use HTTPS redirect on Render
 // app.UseHttpsRedirection();
@@ -60,6 +62,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Health check
-app.MapGet("/", () => "API is running...");
+// Health check
+app.MapGet("/health", () => "API is running...");
 
 app.Run();
