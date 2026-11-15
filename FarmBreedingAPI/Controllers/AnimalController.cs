@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using NpgsqlTypes;
 using FarmBreedingAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -497,6 +498,7 @@ WHERE ""ATCode"" = @ATCode";
                             ""Width""
                         FROM ""ArticleInfo03""
                         WHERE ""ATCode"" = a.""ATCode""
+                          AND ""Weight"" IS NOT NULL
                         ORDER BY ""RecordDate"" DESC, recordid DESC
                         LIMIT 1
                     ) g ON true
@@ -600,5 +602,73 @@ WHERE ""ATCode"" = @ATCode";
                 return BadRequest(ex.Message);
             }
         }
+
+        // ============================
+        // GOAT INSPECTION / WEIGHT ENTRY (WEB PORTAL)
+        // ============================
+        [HttpPost("inspection/save")]
+        public async Task<IActionResult> SaveInspection([FromBody] GoatInspectionRecord model)
+        {
+            if (model == null || model.AnimalNo <= 0)
+                return BadRequest("Please select a valid Animal No.");
+
+            if (model.RecordDate == default)
+                return BadRequest("Please select the recording date.");
+
+            if (model.Weight.HasValue && model.Weight.Value < 0)
+                return BadRequest("Weight cannot be negative.");
+
+            if (model.Teeth.HasValue &&
+                (model.Teeth.Value < 0 || model.Teeth.Value > 8 || model.Teeth.Value % 2 != 0))
+                return BadRequest("Teeth must be 0, 2, 4, 6 or 8.");
+
+            try
+            {
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+
+                const string findAnimalSql = @"
+                    SELECT ""ATCode""
+                    FROM ""ArticleInfo01""
+                    WHERE ""AnimalNo"" = @AnimalNo";
+
+                string atCode;
+                await using (var findCmd = new NpgsqlCommand(findAnimalSql, conn))
+                {
+                    findCmd.Parameters.AddWithValue("@AnimalNo", model.AnimalNo);
+                    var result = await findCmd.ExecuteScalarAsync();
+                    if (result == null || result == DBNull.Value)
+                        return NotFound("Animal No not found.");
+                    atCode = Convert.ToString(result)!;
+                }
+
+                const string insertSql = @"
+                    INSERT INTO ""ArticleInfo03""
+                    (""ATCode"", ""RecordDate"", ""Weight"", ""Teeth"", ""Nails"", ""Hair"")
+                    VALUES
+                    (@ATCode, @RecordDate, @Weight, @Teeth, @Nails, @Hair)";
+
+                await using var cmd = new NpgsqlCommand(insertSql, conn);
+                cmd.Parameters.AddWithValue("@ATCode", atCode);
+                cmd.Parameters.AddWithValue("@RecordDate", NpgsqlDbType.Timestamp, model.RecordDate);
+                cmd.Parameters.AddWithValue("@Weight", NpgsqlDbType.Numeric,
+                    model.Weight.HasValue ? (object)model.Weight.Value : DBNull.Value);
+                cmd.Parameters.AddWithValue("@Teeth", NpgsqlDbType.Integer,
+                    model.Teeth.HasValue ? (object)model.Teeth.Value : DBNull.Value);
+                cmd.Parameters.AddWithValue("@Nails", NpgsqlDbType.Boolean,
+                    model.Nails.HasValue ? (object)model.Nails.Value : DBNull.Value);
+                cmd.Parameters.AddWithValue("@Hair", NpgsqlDbType.Boolean,
+                    model.Hair.HasValue ? (object)model.Hair.Value : DBNull.Value);
+
+                await cmd.ExecuteNonQueryAsync();
+                return Ok(new { message = "Goat inspection record saved successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

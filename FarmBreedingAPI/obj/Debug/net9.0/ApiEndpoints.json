@@ -91,6 +91,22 @@
   },
   {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveInspection",
+    "RelativePath": "api/Animal/inspection/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Models.GoatInspectionRecord",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "GetPhotos",
     "RelativePath": "api/Animal/photos/{atcode}",
     "HttpMethod": "GET",

@@ -110,6 +110,7 @@
             <button onclick="window.print()">Print</button>
         </div>
         <div id="status">Loading...</div>
+        <div id="totalWeight" style="margin:8px 0 12px;font-weight:bold;">Total Weight: 0 kg</div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -135,37 +136,41 @@
             </table>
         </div>
     </div>
-    <script>let goats=[];
-function fmt(v){if(v===null||v===undefined||v==="")return "-";return String(v).split('T')[0];}
-function esc(v){if(v===null||v===undefined||v==="")return "-";return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function render(){
- const q=document.getElementById('search').value.toLowerCase();
- const d=document.getElementById('department').value;
- const g=document.getElementById('gender').value;
- const filtered=goats.filter(a=>{
-   const text=Object.values(a).join(' ').toLowerCase();
-   return (!q||text.includes(q))&&(!d||String(a.departmentNo||'')===d)&&(!g||String(a.gender||'')===g);
- });
- document.getElementById('rows').innerHTML=filtered.map(a=>`<tr>
+    <script>
+        let goats = [];
+        function fmt(v) { if (v === null || v === undefined || v === "") return "-"; return String(v).split('T')[0]; }
+        function esc(v) { if (v === null || v === undefined || v === "") return "-"; return String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+        function render() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const d = document.getElementById('department').value;
+            const g = document.getElementById('gender').value;
+            const filtered = goats.filter(a => {
+                const text = Object.values(a).join(' ').toLowerCase();
+                return (!q || text.includes(q)) && (!d || String(a.departmentNo || '') === d) && (!g || String(a.gender || '') === g);
+            });
+            document.getElementById('rows').innerHTML = filtered.map(a => `<tr>
 <td>${esc(a.animalNo)}</td><td>${esc(a.atCode)}</td><td>${esc(a.gender)}</td><td>${esc(fmt(a.dob))}</td><td>${esc(a.breed)}</td><td>${esc(a.sourceType)}</td><td>${esc(fmt(a.purchaseDate))}</td><td>${esc(a.price)}</td><td>${esc(a.agentName)}</td><td>${esc(a.motherNumber)}</td><td>${esc(a.motherCode)}</td><td>${esc(a.weight)}</td><td>${esc(a.height)}</td><td>${esc(a.width)}</td><td>${esc(a.departmentNo)}</td>
 </tr>`).join('');
- document.getElementById('status').textContent=filtered.length+' goat(s)';
-}
-async function load(){
- try{
-  const r=await fetch('/api/animal/report',{headers:{'app-version':'2'}});
-  if(!r.ok)throw new Error('HTTP '+r.status);
-  goats=await r.json();
-  const ds=[...new Set(goats.map(a=>a.departmentNo).filter(v=>v!==null&&v!==undefined))].sort((a,b)=>a-b);
-  const gs=[...new Set(goats.map(a=>a.gender).filter(Boolean))].sort();
-  document.getElementById('department').innerHTML='<option value="">All Departments</option>'+ds.map(v=>`<option value="${esc(v)}">Department ${esc(v)}</option>`).join('');
-  document.getElementById('gender').innerHTML='<option value="">All Genders</option>'+gs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-  render();
- }catch(e){document.getElementById('status').textContent='Error loading report: '+e.message;}
-}
-document.getElementById('search').addEventListener('input',render);
-document.getElementById('department').addEventListener('change',render);
-document.getElementById('gender').addEventListener('change',render);
-load();</script>
+            const totalWeight = filtered.reduce((sum, a) => { const w = Number(a.weight); return sum + (Number.isFinite(w) ? w : 0); }, 0);
+            document.getElementById('status').textContent = filtered.length + ' goat(s)';
+            document.getElementById('totalWeight').textContent = 'Total Weight: ' + totalWeight.toFixed(2) + ' kg';
+        }
+        async function load() {
+            try {
+                const r = await fetch('/api/animal/report', { headers: { 'app-version': '2' } });
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                goats = await r.json();
+                const ds = [...new Set(goats.map(a => a.departmentNo).filter(v => v !== null && v !== undefined))].sort((a, b) => a - b);
+                const gs = [...new Set(goats.map(a => a.gender).filter(Boolean))].sort();
+                document.getElementById('department').innerHTML = '<option value="">All Departments</option>' + ds.map(v => `<option value="${esc(v)}">Department ${esc(v)}</option>`).join('');
+                document.getElementById('gender').innerHTML = '<option value="">All Genders</option>' + gs.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+                render();
+            } catch (e) { document.getElementById('status').textContent = 'Error loading report: ' + e.message; }
+        }
+        document.getElementById('search').addEventListener('input', render);
+        document.getElementById('department').addEventListener('change', render);
+        document.getElementById('gender').addEventListener('change', render);
+        load();
+    </script>
 </body>
 </html>

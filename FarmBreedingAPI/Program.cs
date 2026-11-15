@@ -1,40 +1,48 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
+
 builder.Host.ConfigureHostOptions(o =>
 {
     o.ServicesStartConcurrently = false;
 });
+
 // Controllers
 builder.Services.AddControllers();
 
 // OpenAPI (keep)
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    
 }
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// ❌ DO NOT use HTTPS redirect on Render
+// DO NOT use HTTPS redirect on Render
 // app.UseHttpsRedirection();
 
-
-// 🔥 VERSION CONTROL ONLY (FOCUS ON YOUR REQUIREMENT)
+// VERSION CONTROL - API REQUESTS ONLY
 app.Use(async (context, next) =>
 {
-    var path = context.Request.Path.Value?.ToLower();
+    var path = context.Request.Path;
 
-    // Allow root and login API
-    if (path == "/" || path.Contains("/api/auth/login"))
+    // Apply version control only to API requests
+    if (!path.StartsWithSegments("/api"))
+    {
+        await next();
+        return;
+    }
+
+    // Allow login API
+    if (path.StartsWithSegments("/api/auth/login"))
     {
         await next();
         return;
@@ -42,7 +50,7 @@ app.Use(async (context, next) =>
 
     var version = context.Request.Headers["app-version"].ToString();
 
-    // ❌ BLOCK OLD OR MISSING VERSION
+    // Block old or missing application versions
     if (string.IsNullOrEmpty(version) || version != "2")
     {
         context.Response.StatusCode = 426;
@@ -51,6 +59,7 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync(
             "{\"message\":\"Version is old. Please update your application.\"}"
         );
+
         return;
     }
 
@@ -61,7 +70,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Health check
 // Health check
 app.MapGet("/health", () => "API is running...");
 
