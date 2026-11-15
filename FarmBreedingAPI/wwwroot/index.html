@@ -784,6 +784,14 @@
             if (moduleName === "growth") {
                 document.getElementById("growthAnimalNo").focus();
             }
+
+            // Retry loading the registered Goat Numbers whenever Inspection
+            // is opened and the sheet is still empty (for example, if the
+            // first API request failed during login).
+            if (moduleName === "inspection" &&
+                document.getElementById("inspectionRows").rows.length === 0) {
+                loadInspectionAnimalNos();
+            }
         }
 
         async function loadGrowthRecords() {
@@ -2234,12 +2242,20 @@
                 });
                 if (!response.ok) throw new Error("Unable to load Goat Numbers. HTTP " + response.status);
 
-                const animalNos = await response.json();
+                const result = await response.json();
+                const animalNos = Array.isArray(result) ? result : [];
                 list.innerHTML = "";
                 tbody.innerHTML = "";
                 inspectionRowCounter = 0;
 
-                animalNos.forEach(function (animalNo) {
+                animalNos.forEach(function (item) {
+                    // API currently returns integer AnimalNo values. Also
+                    // accept object-shaped values without breaking the list.
+                    const animalNo = (item && typeof item === "object")
+                        ? (item.animalNo ?? item.AnimalNo)
+                        : item;
+                    if (animalNo === null || animalNo === undefined || animalNo === "") return;
+
                     const option = document.createElement("option");
                     option.value = animalNo;
                     list.appendChild(option);
@@ -2247,7 +2263,11 @@
                 });
 
                 updateInspectionGrandTotal();
-                if (animalNos.length === 0) showInspectionMessage("No registered goats found in ArticleInfo01.", true);
+                if (animalNos.length === 0) {
+                    showInspectionMessage("No registered goats found in ArticleInfo01.", true);
+                } else {
+                    document.getElementById("inspectionMessage").style.display = "none";
+                }
             } catch (error) {
                 console.error("Inspection Goat Number loading error:", error);
                 showInspectionMessage(error.message, true);
