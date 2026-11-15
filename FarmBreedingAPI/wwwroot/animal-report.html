@@ -34,6 +34,10 @@
             font-size: 14px
         }
 
+        .toolbar input[type=number] {
+            width: 125px
+        }
+
         button {
             cursor: pointer
         }
@@ -107,10 +111,13 @@
             <input id="search" type="text" placeholder="Search...">
             <select id="department"><option value="">All Departments</option></select>
             <select id="gender"><option value="">All Genders</option></select>
-            <button onclick="window.print()">Print</button>
+            <input id="weightFrom" type="number" min="0" step="any" placeholder="Weight From">
+            <input id="weightTo" type="number" min="0" step="any" placeholder="Weight To">
+            <button onclick="window.print()">Print / PDF</button>
         </div>
         <div id="status">Loading...</div>
-        <div id="totalWeight" style="margin:8px 0 12px;font-weight:bold;">Total Weight: 0 kg</div>
+        <div id="totalWeight" style="margin:8px 0 4px;font-weight:bold;">Grand Total Weight: 0 kg</div>
+        <div id="dfTotal" style="margin:0 0 12px;font-weight:bold;">DF (2%): 0.00 kg</div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -144,16 +151,30 @@
             const q = document.getElementById('search').value.toLowerCase();
             const d = document.getElementById('department').value;
             const g = document.getElementById('gender').value;
+            const fromText = document.getElementById('weightFrom').value.trim();
+            const toText = document.getElementById('weightTo').value.trim();
+            const from = fromText === '' ? null : Number(fromText);
+            const to = toText === '' ? null : Number(toText);
+            if (from !== null && to !== null && from > to) {
+                document.getElementById('status').textContent = 'Weight From cannot be greater than Weight To.';
+                document.getElementById('rows').innerHTML = '';
+                document.getElementById('totalWeight').textContent = 'Grand Total Weight: 0.00 kg';
+                document.getElementById('dfTotal').textContent = 'DF (2%): 0.00 kg';
+                return;
+            }
             const filtered = goats.filter(a => {
                 const text = Object.values(a).join(' ').toLowerCase();
-                return (!q || text.includes(q)) && (!d || String(a.departmentNo || '') === d) && (!g || String(a.gender || '') === g);
+                const w = a.weight === null || a.weight === undefined || a.weight === '' ? null : Number(a.weight);
+                const weightMatch = (from === null && to === null) || (w !== null && Number.isFinite(w) && (from === null || w >= from) && (to === null || w <= to));
+                return (!q || text.includes(q)) && (!d || String(a.departmentNo || '') === d) && (!g || String(a.gender || '') === g) && weightMatch;
             });
             document.getElementById('rows').innerHTML = filtered.map(a => `<tr>
 <td>${esc(a.animalNo)}</td><td>${esc(a.atCode)}</td><td>${esc(a.gender)}</td><td>${esc(fmt(a.dob))}</td><td>${esc(a.breed)}</td><td>${esc(a.sourceType)}</td><td>${esc(fmt(a.purchaseDate))}</td><td>${esc(a.price)}</td><td>${esc(a.agentName)}</td><td>${esc(a.motherNumber)}</td><td>${esc(a.motherCode)}</td><td>${esc(a.weight)}</td><td>${esc(a.height)}</td><td>${esc(a.width)}</td><td>${esc(a.departmentNo)}</td>
 </tr>`).join('');
             const totalWeight = filtered.reduce((sum, a) => { const w = Number(a.weight); return sum + (Number.isFinite(w) ? w : 0); }, 0);
             document.getElementById('status').textContent = filtered.length + ' goat(s)';
-            document.getElementById('totalWeight').textContent = 'Total Weight: ' + totalWeight.toFixed(2) + ' kg';
+            document.getElementById('totalWeight').textContent = 'Grand Total Weight: ' + totalWeight.toFixed(2) + ' kg';
+            document.getElementById('dfTotal').textContent = 'DF (2%): ' + (totalWeight * 0.02).toFixed(2) + ' kg';
         }
         async function load() {
             try {
@@ -170,6 +191,8 @@
         document.getElementById('search').addEventListener('input', render);
         document.getElementById('department').addEventListener('change', render);
         document.getElementById('gender').addEventListener('change', render);
+        document.getElementById('weightFrom').addEventListener('input', render);
+        document.getElementById('weightTo').addEventListener('input', render);
         load();
     </script>
 </body>
