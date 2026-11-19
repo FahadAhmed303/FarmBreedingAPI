@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Goat Printouts</title>
+    <style>
+        body {
+            font-family: Arial,sans-serif;
+            margin: 20px;
+            color: #111
+        }
+
+        .toolbar {
+            margin-bottom: 18px
+        }
+
+            .toolbar button {
+                padding: 10px 16px;
+                margin-right: 8px;
+                cursor: pointer
+            }
+
+        .sheet {
+            width: 100%;
+        }
+
+            .sheet h2 {
+                text-align: center;
+                margin: 0 0 8px
+            }
+
+            .sheet .date {
+                text-align: center;
+                margin: 0 0 14px
+            }
+
+            .sheet table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed
+            }
+
+            .sheet th, .sheet td {
+                border: 1px solid #222;
+                padding: 8px 5px;
+                text-align: center;
+                font-size: 11px;
+                height: 27px
+            }
+
+            .sheet th {
+                background: #eee
+            }
+
+        .page {
+            page-break-after: always;
+            break-after: page
+        }
+
+        .hidden {
+            display: none
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 10mm
+        }
+
+        @media print {
+            .toolbar {
+                display: none
+            }
+
+            body {
+                margin: 0
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+                break-after: auto
+            }
+
+            .sheet th {
+                background: #eee !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar"><button onclick="window.print()">Print</button><button onclick="location.href='/index.html'">Back to Portal</button></div>
+    <div id="content">Loading...</div>
+    <script>async function getActiveGoats(){const r=await fetch('/api/animal/report',{headers:{'app-version':'2'}});if(!r.ok)throw new Error('Unable to load active goats. HTTP '+r.status);return await r.json();}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function inspection(goats){let rows=goats.map(g=>`<tr><td>${esc(g.animalNo)}</td><td>${esc(g.gender)}</td>${Array.from({length:7},()=>'<td></td>').join('')}</tr>`).join('');document.getElementById('content').innerHTML=`<div class="sheet"><h2>GOAT INFORMATION & INSPECTION SHEET</h2><p class="date">Date: __________________________________</p><table><thead><tr><th>Goat No.</th><th>Gender</th><th>Weight</th><th>Teeth</th><th>Nails</th><th>Hair</th><th>Pregnancy Status</th><th>Days Pregnant</th><th>No. of Babies</th></tr></thead><tbody>${rows}</tbody></table><p>Checked by: ________________________________ &nbsp;&nbsp; Signature: __________________</p></div>`;}
+function registration(){const cols=['Goat No.','Type (Purchased/Born)','Gender','DOB','Breed','Mother No.','Weight','Purchase Date','Purchase Price'];const count=10;const rows=Array.from({length:count},()=>'<tr>'+cols.map(()=>'<td></td>').join('')+'</tr>').join('');document.getElementById('content').innerHTML=`<div class="sheet"><h2>NEW GOAT REGISTRATION REGISTER</h2><p class="date">Date: __________________________ &nbsp;&nbsp;&nbsp; Department: __________________________</p><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><p>Recorded by: ________________________________ &nbsp;&nbsp; Verified by: __________________</p></div>`;}
+(async()=>{try{const form=new URLSearchParams(location.search).get('form');if(form==='registration'){registration();return;}const goats=await getActiveGoats();if(!Array.isArray(goats)||!goats.length){document.getElementById('content').textContent='No active goats found.';return;}inspection(goats);}catch(e){document.getElementById('content').textContent=e.message;}})();</script>
+</body>
+</html>

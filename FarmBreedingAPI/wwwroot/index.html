@@ -340,6 +340,7 @@
     <div id="mainPage" style="display:none;">
         <div class="header">
             <h1>Farm Breeding Management</h1>
+            <a href="/department-edit.html" style="color:white;display:inline-block;margin-top:10px;">Department Edit</a>
             <button class="logout-button" onclick="logout()">Logout</button>
         </div>
 
@@ -349,11 +350,20 @@
                 <button type="button" id="navGoatInfo" class="active" onclick="showModule('goatInfo')">Goat Information</button>
                 <button type="button" id="navInspection" onclick="showModule('inspection')">Goat Inspection</button>
                 <button type="button" id="navGrowth" onclick="showModule('growth')">Growth Records</button>
+                <button type="button" id="navItems" onclick="showModule('items')">Item Master</button>
+                <button type="button" id="navRecipes" onclick="showModule('recipes')">Food Recipe</button>
+                <button type="button" id="navFoodIssue" onclick="showModule('foodIssue')">Daily Food Issuance</button>
+                <button type="button" id="navFoodPurchase" onclick="showModule('foodPurchase')">Food Purchase</button>
+                <button type="button" id="navFoodProduction" onclick="showModule('foodProduction')">Food Production</button>
+                <button type="button" id="navFoodWaste" onclick="showModule('foodWaste')">Food Waste</button>
+                <button type="button" id="navFoodStock" onclick="showModule('foodStock')">Stock Report</button>
+
+                <button type="button" id="navDepartment" onclick="window.location.href='/department-edit.html'">Department Edit</button>
             </div>
 
             <!-- ==========================================
-                 SEARCH
-                 ========================================== -->
+            SEARCH
+            ========================================== -->
 
             <div id="goatInformationCard" class="card">
 
@@ -373,6 +383,14 @@
                         PDF - All Goats
                     </button>
 
+                    <button type="button" onclick="window.location.href='/goat-printouts.html?form=inspection'">
+                        Print Inspection Sheet (Active Goats)
+                    </button>
+
+                    <button type="button" onclick="window.location.href='/goat-printouts.html?form=registration'">
+                        Print New Goat Register
+                    </button>
+
                 </div>
 
                 <div id="message" class="message"></div>
@@ -381,8 +399,8 @@
 
 
             <!-- ==========================================
-                 GOAT INSPECTION - BULK ENTRY
-                 ========================================== -->
+            GOAT INSPECTION - BULK ENTRY
+            ========================================== -->
 
             <div id="inspectionCard" class="card" style="display:none;">
                 <h2>Goat Inspection - Bulk Entry</h2>
@@ -448,12 +466,179 @@
             </div>
 
 
+            <!-- FOOD RECIPE -->
+            <div id="foodRecipeCard" class="card" style="display:none;">
+                <h2>Food Recipe</h2>
+                <div class="edit-grid">
+                    <div class="edit-field"><label for="recipeFinishedFood">Finished Food</label><select id="recipeFinishedFood"></select></div>
+                    <div class="edit-field"><label for="recipeName">Recipe Name</label><input id="recipeName" maxlength="120" placeholder="Recipe name" /></div>
+                    <div class="edit-field"><label for="recipeVersion">Version No</label><input id="recipeVersion" type="number" min="1" value="1" /></div>
+                    <div class="edit-field"><label for="recipeOutputQty">Batch Output Quantity</label><input id="recipeOutputQty" type="number" min="0.001" step="0.001" value="1" /></div>
+                    <div class="edit-field"><label for="recipeDate">Effective Date</label><input id="recipeDate" type="date" /></div>
+                    <div class="edit-field"><label><input id="recipeActive" type="checkbox" checked /> Active</label></div>
+                </div>
+                <h3>Ingredients (Raw Material or Finished Food)</h3>
+                <div class="inspection-table-wrap"><table class="inspection-table" style="min-width:650px"><thead><tr><th>Item</th><th>Item Type</th><th>Quantity</th><th>Unit</th><th></th></tr></thead><tbody id="recipeIngredientRows"></tbody></table></div>
+                <div class="inspection-actions"><button type="button" onclick="addRecipeIngredient()">+ Add Ingredient</button><button type="button" id="saveRecipeButton" onclick="saveFoodRecipe()">Save Recipe</button><button type="button" onclick="resetFoodRecipe()">New / Clear</button></div>
+                <div id="recipeMessage" class="message"></div>
+                <h3>Saved Recipes</h3><div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Finished Food</th><th>Recipe</th><th>Version</th><th>Batch Output</th><th>Effective Date</th><th>Ingredients</th><th>Action</th></tr></thead><tbody id="recipeRows"></tbody></table></div>
+            </div>
+
+
+            <!-- DAILY FOOD ISSUE -->
+            <div id="foodIssueCard" class="card" style="display:none;">
+                <h2>Daily Food Issuance</h2>
+
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                    <button type="button" onclick="moveFoodIssue(-1)">Previous</button>
+                    <input id="foodIssueDate" type="date" style="max-width:190px" onchange="loadFoodIssueByDate(this.value)" />
+                    <button type="button" onclick="moveFoodIssue(1)">Next</button>
+                    <span id="foodIssueStatus" style="font-weight:bold"></span>
+                </div>
+
+                <div class="edit-field" style="max-width:420px">
+                    <label>Finished Food Item</label>
+                    <select id="foodIssueItemID"></select>
+                </div>
+
+                <!-- GRAND TOTALS -->
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;">
+                    <div style="padding:14px;border:1px solid #ccc;border-radius:8px;">
+                        <div style="font-size:13px;color:#666;">Grand Total Goat Weight</div>
+                        <div id="foodIssueGrandWeight" style="font-size:22px;font-weight:bold;">0.00 kg</div>
+                    </div>
+
+                    <div style="padding:14px;border:1px solid #ccc;border-radius:8px;">
+                        <div style="font-size:13px;color:#666;">Grand Total Calculated Food</div>
+                        <div id="foodIssueGrandCalculated" style="font-size:22px;font-weight:bold;">0.00 kg</div>
+                    </div>
+
+                    <div style="padding:14px;border:1px solid #ccc;border-radius:8px;">
+                        <div style="font-size:13px;color:#666;">Grand Total Food Issued</div>
+                        <div id="foodIssueGrandIssued" style="font-size:22px;font-weight:bold;">0.00 kg</div>
+                    </div>
+                </div>
+
+                <div class="inspection-table-wrap">
+                    <table class="inspection-table" style="min-width:850px">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>No. of Goats</th>
+                                <th>Total Goat Weight (kg)</th>
+                                <th>Calculated Food (kg)</th>
+                                <th>Food Issued (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="foodIssueRows"></tbody>
+                    </table>
+                </div>
+
+                <div class="inspection-actions">
+                    <button type="button" onclick="newFoodIssue()">New</button>
+                    <button type="button" id="editFoodIssueButton" onclick="enableFoodIssueEdit()">Edit</button>
+                    <button type="button" id="saveFoodIssueButton" onclick="saveFoodIssue()">Save</button>
+                    <button type="button" onclick="printFoodIssue()">Print</button>
+                    <button type="button" onclick="deleteFoodIssue()">Delete</button>
+                </div>
+
+                <div id="foodIssueMessage" class="message"></div>
+            </div>
+
+
+            <!-- FOOD PURCHASE -->
+            <div id="foodPurchaseCard" class="card" style="display:none;">
+                <h2>Food Purchase</h2><div class="edit-grid">
+                    <div class="edit-field"><label>Purchase Date</label><input id="purchaseDate" type="date"></div>
+                    <div class="edit-field"><label>Supplier</label><input id="purchaseSupplier" type="text"></div>
+                    <div class="edit-field"><label>Invoice No.</label><input id="purchaseInvoice" type="text"></div>
+                </div><h3>Purchase Items</h3><div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Quantity</th><th>Unit Rate</th><th></th></tr></thead><tbody id="purchaseLines"></tbody></table></div>
+                <div class="inspection-actions"><button onclick="addPurchaseLine()">Add Item</button><button onclick="savePurchase()">Save Purchase</button></div><div id="purchaseMessage" class="message"></div>
+            </div>
+            <!-- FOOD PRODUCTION -->
+            <div id="foodProductionCard" class="card" style="display:none;">
+                <h2>Food Production</h2><div class="edit-grid"><div class="edit-field"><label>Production Date</label><input id="productionDate" type="date"></div><div class="edit-field"><label>Recipe</label><select id="productionRecipe"></select></div><div class="edit-field"><label>Produced Quantity</label><input id="productionQty" type="number" min="0.001" step="0.001"></div><div class="edit-field"><label>Remarks</label><input id="productionRemarks"></div></div><div class="inspection-actions"><button onclick="saveProduction()">Save Production</button></div><div id="productionMessage" class="message"></div>
+            </div>
+            <!-- FOOD WASTE -->
+            <div id="foodWasteCard" class="card" style="display:none;">
+                <h2>Food Waste</h2><div class="edit-grid"><div class="edit-field"><label>Waste Date</label><input id="wasteDate" type="date"></div><div class="edit-field"><label>Reason</label><input id="wasteReason" type="text"></div><div class="edit-field"><label>Remarks</label><input id="wasteRemarks" type="text"></div></div><div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Quantity</th><th></th></tr></thead><tbody id="wasteLines"></tbody></table></div><div class="inspection-actions"><button onclick="addWasteLine()">Add Item</button><button onclick="saveWaste()">Save Waste</button></div><div id="wasteMessage" class="message"></div>
+            </div>
+            <!-- STOCK REPORT -->
+            <div id="foodStockCard" class="card" style="display:none;">
+                <h2>Food Stock Report</h2><div class="edit-grid"><div class="edit-field"><label>From Date</label><input id="stockFrom" type="date"></div><div class="edit-field"><label>To Date</label><input id="stockTo" type="date"></div></div><div class="inspection-actions"><button onclick="loadStockReport()">Generate Report</button><button onclick="window.print()">Print / Save PDF</button></div><div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Type</th><th>Unit</th><th>Opening</th><th>Purchased</th><th>Produced</th><th>Consumed</th><th>Issued</th><th>Waste</th><th>Closing</th></tr></thead><tbody id="stockRows"></tbody></table></div><div id="stockMessage" class="message"></div>
+            </div>
+
+            <!-- ITEM MASTER -->
+            <div id="itemMasterCard" class="card" style="display:none;">
+                <h2>Item Master</h2>
+                <p>Maintain finished food and raw material items used in recipes and stock transactions.</p>
+
+                <div class="edit-grid">
+                    <div class="edit-field">
+                        <label for="itemName">Item Name</label>
+                        <input id="itemName" type="text" maxlength="100" placeholder="Enter item name" />
+                    </div>
+                    <div class="edit-field">
+                        <label for="itemType">Item Type</label>
+                        <select id="itemType">
+                            <option value="FINISHED_FOOD">Finished Food</option>
+                            <option value="RAW_MATERIAL">Raw Material</option>
+                        </select>
+                    </div>
+                    <div class="edit-field">
+                        <label for="itemBaseUnit">Base Unit</label>
+                        <select id="itemBaseUnit">
+                            <option value="kg">kg</option>
+                            <option value="gram">gram</option>
+                            <option value="litre">litre</option>
+                            <option value="ml">ml</option>
+                            <option value="piece">piece</option>
+                        </select>
+                    </div>
+                    <div class="edit-field">
+                        <label for="itemDescription">Description (Optional)</label>
+                        <input id="itemDescription" type="text" maxlength="500" placeholder="Description" />
+                    </div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <label style="display:inline-flex;align-items:center;gap:8px;">
+                        <input id="itemIsActive" type="checkbox" checked style="width:auto;" />
+                        Active
+                    </label>
+                </div>
+
+                <div class="inspection-actions">
+                    <button type="button" id="saveItemButton" onclick="saveItem()">Save Item</button>
+                    <button type="button" class="cancel-button" onclick="resetItemForm()">Clear</button>
+                </div>
+                <div id="itemMessage" class="message"></div>
+
+                <h3>Registered Items</h3>
+                <div class="inspection-table-wrap">
+                    <table class="growth-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Item Type</th>
+                                <th>Base Unit</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemRows"></tbody>
+                    </table>
+                </div>
+            </div>
+
+
             <!-- ==========================================
-                 ANIMAL DISPLAY
-                 ========================================== -->
+            ANIMAL DISPLAY
+            ========================================== -->
             <!-- ==========================================
-                 ANIMAL DISPLAY
-                 ========================================== -->
+            ANIMAL DISPLAY
+            ========================================== -->
 
             <div id="animalCard"
                  class="card"
@@ -529,8 +714,8 @@
 
 
             <!-- ==========================================
-                 EDIT
-                 ========================================== -->
+            EDIT
+            ========================================== -->
 
             <div id="editCard"
                  class="card"
@@ -730,6 +915,40 @@
 
                     </div>
 
+                    <div class="edit-field">
+                        <label>Goat Status</label>
+                        <select id="eGoatStatus" onchange="goatStatusChanged()">
+                            <option value="Active">Active</option>
+                            <option value="Sold">Sold</option>
+                            <option value="Expired">Expired</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field" id="soldExpiredDateField">
+                        <label id="soldExpiredDateLabel">Sold / Expired Date</label>
+                        <input id="eSoldExpiredDate" type="date" />
+                    </div>
+
+                    <div class="edit-field" id="sellingAmountField">
+                        <label>Selling Amount (PKR)</label>
+                        <input id="eSellingAmount" type="number" min="0" step="0.01" placeholder="Only for sold goats" />
+                    </div>
+
+                    <div class="edit-field" id="expiredRemarkField" style="display:none;">
+                        <label>Expired Remark</label>
+                        <textarea id="eExpiredRemark" rows="3" placeholder="Reason / details for expiry"></textarea>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>New Weight (kg) - Optional</label>
+                        <input id="eNewWeight" type="number" min="0" step="0.01" placeholder="Enter new weight" />
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Weight Recording Date</label>
+                        <input id="eWeightRecordDate" type="date" />
+                    </div>
+
                 </div>
 
 
@@ -759,1635 +978,13 @@
         </div>
     </div>
 
-    <script>
-
-        let currentAnimal = null;
-
-        // ==========================================
-        // MODULE NAVIGATION
-        // ==========================================
-
-        function showModule(moduleName) {
-            document.getElementById("goatInformationCard").style.display =
-                moduleName === "goatInfo" ? "block" : "none";
-            document.getElementById("animalCard").style.display = "none";
-            document.getElementById("editCard").style.display = "none";
-            document.getElementById("inspectionCard").style.display =
-                moduleName === "inspection" ? "block" : "none";
-            document.getElementById("growthCard").style.display =
-                moduleName === "growth" ? "block" : "none";
-
-            document.getElementById("navGoatInfo").classList.toggle("active", moduleName === "goatInfo");
-            document.getElementById("navInspection").classList.toggle("active", moduleName === "inspection");
-            document.getElementById("navGrowth").classList.toggle("active", moduleName === "growth");
-
-            if (moduleName === "growth") {
-                document.getElementById("growthAnimalNo").focus();
-            }
-
-            // Retry loading the registered Goat Numbers whenever Inspection
-            // is opened and the sheet is still empty (for example, if the
-            // first API request failed during login).
-            if (moduleName === "inspection" &&
-                document.getElementById("inspectionRows").rows.length === 0) {
-                loadInspectionAnimalNos();
-            }
-        }
-
-        async function loadGrowthRecords() {
-            const animalNo = document.getElementById("growthAnimalNo").value.trim();
-            const message = document.getElementById("growthMessage");
-            const tbody = document.getElementById("growthRows");
-
-            message.style.display = "none";
-            tbody.innerHTML = "";
-
-            if (!animalNo) {
-                showGrowthMessage("Please enter Animal No.", true);
-                return;
-            }
-
-            try {
-                const animalResponse = await fetch(
-                    `/api/animal/byanimalno/${encodeURIComponent(animalNo)}`,
-                    { headers: { "app-version": "2" } }
-                );
-
-                if (!animalResponse.ok) {
-                    showGrowthMessage(animalResponse.status === 404
-                        ? "Animal not found."
-                        : "Unable to find goat. HTTP " + animalResponse.status, true);
-                    return;
-                }
-
-                const animal = await animalResponse.json();
-                if (!animal || !animal.atCode) {
-                    showGrowthMessage("Animal not found.", true);
-                    return;
-                }
-
-                const response = await fetch(
-                    `/api/growthrecord/${encodeURIComponent(animal.atCode)}`,
-                    { headers: { "app-version": "2" } }
-                );
-
-                if (!response.ok) {
-                    showGrowthMessage("Unable to load growth records. HTTP " + response.status, true);
-                    return;
-                }
-
-                const records = await response.json();
-                if (!Array.isArray(records) || records.length === 0) {
-                    showGrowthMessage("No growth records found for Goat No. " + animalNo + ".", false);
-                    return;
-                }
-
-                records.forEach(function (record) {
-                    const tr = document.createElement("tr");
-                    const values = [
-                        formatDate(record.recordDate),
-                        record.weight ?? "-",
-                        record.height ?? "-",
-                        record.width ?? "-"
-                    ];
-                    values.forEach(function (value) {
-                        const td = document.createElement("td");
-                        td.textContent = value;
-                        tr.appendChild(td);
-                    });
-                    tbody.appendChild(tr);
-                });
-                showGrowthMessage("Growth records for Goat No. " + animalNo + " (" + records.length + " record(s)).", false);
-            } catch (error) {
-                showGrowthMessage("Error loading growth records: " + error.message, true);
-            }
-        }
-
-        function showGrowthMessage(text, isError) {
-            const message = document.getElementById("growthMessage");
-            message.textContent = text;
-            message.className = isError ? "message error" : "message success";
-            message.style.display = "block";
-        }
-
-        // ==========================================
-        // LOGIN
-        // ==========================================
-
-        async function login() {
-
-            const username =
-                document.getElementById("loginUsername").value.trim();
-
-            const password =
-                document.getElementById("loginPassword").value;
-
-            if (!username || !password) {
-                alert("Please enter User ID and Password.");
-                return;
-            }
-
-            try {
-
-                const response = await fetch(
-                    "/api/auth/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            username: username,
-                            password: password
-                        })
-                    }
-                );
-
-                if (!response.ok) {
-                    alert("Invalid User ID or Password.");
-                    return;
-                }
-
-                const result = await response.json();
-
-                if (!result || result.success !== true) {
-                    alert("Invalid User ID or Password.");
-                    return;
-                }
-
-                document.getElementById("loginPage").style.display = "none";
-                document.getElementById("mainPage").style.display = "block";
-                showModule("goatInfo");
-                await loadInspectionAnimalNos();
-            }
-            catch (error) {
-                alert("Error connecting to API: " + error.message);
-            }
-        }
-
-        function logout() {
-            document.getElementById("mainPage").style.display = "none";
-            document.getElementById("loginPage").style.display = "block";
-            document.getElementById("loginUsername").value = "";
-            document.getElementById("loginPassword").value = "";
-        }
-
-        // ==========================================
-        // MOTHER VALIDATION STATE
-        // ==========================================
-
-        let motherLookupValid = true;
-
-
-        // ==========================================
-        // SAVE BUTTON CONTROL
-        // ==========================================
-
-        function updateSaveButton() {
-
-            const saveButton =
-                document.getElementById("saveButton");
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-            const motherNumber =
-                document.getElementById("eMotherNumber").value.trim();
-
-            const motherCode =
-                document.getElementById("eMotherCode").value.trim();
-
-
-            // PURCHASE does not require mother
-
-            if (sourceType === "PURCHASE") {
-
-                saveButton.disabled = false;
-
-                return;
-            }
-
-
-            // BORN requires valid mother
-
-            if (sourceType === "BORN") {
-
-                if (
-                    motherNumber &&
-                    motherCode &&
-                    motherLookupValid
-                ) {
-
-                    saveButton.disabled = false;
-
-                }
-                else {
-
-                    saveButton.disabled = true;
-                }
-
-                return;
-            }
-
-
-            // No source selected
-
-            saveButton.disabled = true;
-        }
-
-
-        // ==========================================
-        // PDF - ALL GOATS
-        // ==========================================
-
-        function printAllGoats() {
-            window.open("/animal-report.html", "_blank");
-        }
-
-
-        // ==========================================
-        // SEARCH ANIMAL
-        // ==========================================
-
-        async function loadAnimal() {
-
-            const animalNo =
-                document.getElementById("animalNo").value;
-
-            const message =
-                document.getElementById("message");
-
-
-            document.getElementById("animalCard").style.display =
-                "none";
-
-            document.getElementById("editCard").style.display =
-                "none";
-
-            message.style.display =
-                "none";
-
-
-            if (!animalNo) {
-
-                showMessage(
-                    "Please enter Animal No.",
-                    true
-                );
-
-                return;
-            }
-
-
-            try {
-
-                const response = await fetch(
-                    `/api/animal/byanimalno/${animalNo}`,
-                    {
-                        headers: {
-                            "app-version": "2"
-                        }
-                    }
-                );
-
-
-                if (!response.ok) {
-
-                    showMessage(
-                        response.status === 404
-                            ? "Animal not found."
-                            : "Unable to load animal. HTTP " +
-                            response.status,
-                        true
-                    );
-
-                    return;
-                }
-
-
-                const result =
-                    await response.json();
-
-
-                if (!result || !result.atCode) {
-
-                    showMessage(
-                        "Animal not found.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                await loadAnimalDetails(
-                    result.atCode
-                );
-
-            }
-            catch (error) {
-
-                showMessage(
-                    "Error connecting to API: " +
-                    error.message,
-                    true
-                );
-            }
-        }
-
-
-        // ==========================================
-        // LOAD ANIMAL DETAILS
-        // ==========================================
-
-        async function loadAnimalDetails(atCode) {
-
-            const response = await fetch(
-                `/api/animal/${encodeURIComponent(atCode)}`,
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                showMessage(
-                    "Unable to load animal details.",
-                    true
-                );
-
-                return;
-            }
-
-
-            const animal =
-                await response.json();
-
-
-            currentAnimal =
-                animal;
-
-
-            document.getElementById("vAnimalNo").textContent =
-                animal.animalNo ?? "-";
-
-
-            document.getElementById("vATCode").textContent =
-                animal.atCode ?? "-";
-
-
-            document.getElementById("vGender").textContent =
-                animal.gender ?? "-";
-
-
-            document.getElementById("vDOB").textContent =
-                formatDate(animal.dob);
-
-
-            document.getElementById("vBreed").textContent =
-                animal.breed ?? "-";
-
-
-            document.getElementById("vMotherNumber").textContent =
-                animal.motherNumber ?? "-";
-
-
-            document.getElementById("vMotherCode").textContent =
-                animal.motherCode ?? "-";
-
-
-            document.getElementById("vSourceType").textContent =
-                animal.sourceType ?? "-";
-
-
-            document.getElementById("vPurchaseDate").textContent =
-                formatDate(animal.purchaseDate);
-
-
-            document.getElementById("vPrice").textContent =
-                animal.price ?? "-";
-
-
-            document.getElementById("vAgentName").textContent =
-                animal.agentName ?? "-";
-
-
-            document.getElementById("animalCard").style.display =
-                "block";
-
-
-            showMessage(
-                "Goat loaded successfully.",
-                false
-            );
-        }
-
-
-        // ==========================================
-        // OPEN EDIT MODE
-        // ==========================================
-
-        async function editAnimal() {
-
-            if (!currentAnimal) {
-                return;
-            }
-
-
-            document.getElementById("eAnimalNo").value =
-                currentAnimal.animalNo ?? "";
-
-
-            document.getElementById("eATCode").value =
-                currentAnimal.atCode ?? "";
-
-
-            document.getElementById("eGender").value =
-                currentAnimal.gender ?? "";
-
-
-            document.getElementById("eDOB").value =
-                toInputDate(currentAnimal.dob);
-
-
-            document.getElementById("eSourceType").value =
-                currentAnimal.sourceType ?? "";
-
-
-            document.getElementById("ePurchaseDate").value =
-                toInputDate(currentAnimal.purchaseDate);
-
-
-            document.getElementById("ePrice").value =
-                currentAnimal.price ?? "";
-
-
-            document.getElementById("eAgentName").value =
-                currentAnimal.agentName ?? "";
-
-
-            document.getElementById("eMotherNumber").value =
-                currentAnimal.motherNumber ?? "";
-
-
-            document.getElementById("eMotherCode").value =
-                currentAnimal.motherCode ?? "";
-
-
-            // Existing mother is considered valid
-            // until user changes Mother Number.
-
-            motherLookupValid =
-                !!currentAnimal.motherCode;
-
-
-            await loadCategories();
-
-            await loadBreeds();
-
-
-            document.getElementById("eCategory").value =
-                currentAnimal.atCategoryCode ?? "";
-
-
-            document.getElementById("eBreed").value =
-                currentAnimal.breed ?? "";
-
-
-            sourceTypeChanged();
-
-
-            document.getElementById("editCard").style.display =
-                "block";
-
-
-            document.getElementById("editCard").scrollIntoView({
-                behavior: "smooth"
-            });
-
-
-            updateSaveButton();
-        }
-
-
-        // ==========================================
-        // LOAD CATEGORIES
-        // ==========================================
-
-        async function loadCategories() {
-
-            const response = await fetch(
-                "/api/category",
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load categories."
-                );
-            }
-
-
-            const categories =
-                await response.json();
-
-
-            const select =
-                document.getElementById("eCategory");
-
-
-            select.innerHTML =
-                '<option value="">Select Category</option>';
-
-
-            categories.forEach(category => {
-
-                const option =
-                    document.createElement("option");
-
-
-                option.value =
-                    category.atCategoryCode;
-
-
-                option.textContent =
-                    category.atCategoryName;
-
-
-                select.appendChild(option);
-
-            });
-        }
-
-
-        // ==========================================
-        // LOAD BREEDS
-        // ==========================================
-
-        async function loadBreeds() {
-
-            const response = await fetch(
-                "/api/breed",
-                {
-                    headers: {
-                        "app-version": "2"
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load breeds."
-                );
-            }
-
-
-            const breeds =
-                await response.json();
-
-
-            const select =
-                document.getElementById("eBreed");
-
-
-            select.innerHTML =
-                '<option value="">Select Breed</option>';
-
-
-            breeds.forEach(breed => {
-
-                const option =
-                    document.createElement("option");
-
-
-                option.value =
-                    breed.breedName;
-
-
-                option.textContent =
-                    breed.breedName;
-
-
-                select.appendChild(option);
-
-            });
-        }
-
-
-        // ==========================================
-        // SOURCE TYPE
-        // ==========================================
-
-        function sourceTypeChanged() {
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-
-            const purchaseDate =
-                document.getElementById("ePurchaseDate");
-
-
-            const price =
-                document.getElementById("ePrice");
-
-
-            const agentName =
-                document.getElementById("eAgentName");
-
-
-            const motherNumber =
-                document.getElementById("eMotherNumber");
-
-
-            const motherCode =
-                document.getElementById("eMotherCode");
-
-
-            if (sourceType === "PURCHASE") {
-
-                purchaseDate.disabled =
-                    false;
-
-                price.disabled =
-                    false;
-
-                agentName.disabled =
-                    false;
-
-
-                motherNumber.value =
-                    "";
-
-                motherCode.value =
-                    "";
-
-
-                motherNumber.disabled =
-                    true;
-
-                motherCode.disabled =
-                    true;
-
-
-                motherLookupValid =
-                    true;
-            }
-
-            else if (sourceType === "BORN") {
-
-                purchaseDate.value =
-                    "";
-
-                price.value =
-                    "";
-
-                agentName.value =
-                    "";
-
-
-                purchaseDate.disabled =
-                    true;
-
-                price.disabled =
-                    true;
-
-                agentName.disabled =
-                    true;
-
-
-                motherNumber.disabled =
-                    false;
-
-                motherCode.disabled =
-                    true;
-
-
-                motherLookupValid =
-                    !!motherNumber.value &&
-                    !!motherCode.value;
-            }
-
-            else {
-
-                purchaseDate.disabled =
-                    false;
-
-                price.disabled =
-                    false;
-
-                agentName.disabled =
-                    false;
-
-
-                motherNumber.disabled =
-                    false;
-
-                motherCode.disabled =
-                    false;
-
-
-                motherLookupValid =
-                    true;
-            }
-
-
-            document.getElementById("eGender").disabled =
-                false;
-
-            document.getElementById("eCategory").disabled =
-                false;
-
-            document.getElementById("eDOB").disabled =
-                false;
-
-            document.getElementById("eBreed").disabled =
-                false;
-
-
-            updateSaveButton();
-        }
-
-
-        // ==========================================
-        // MOTHER NUMBER → MOTHER CODE
-        // ==========================================
-
-        async function motherNumberChanged() {
-
-            const input =
-                document.getElementById("eMotherNumber");
-
-            const motherCode =
-                document.getElementById("eMotherCode");
-
-
-            const motherNumber =
-                input.value.trim();
-
-
-            // ==========================================
-            // EMPTY
-            // ==========================================
-
-            if (!motherNumber) {
-
-                motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
-                updateSaveButton();
-
-                document.getElementById("message").style.display =
-                    "none";
-
-                return;
-            }
-
-
-            // ==========================================
-            // OWN ANIMAL
-            // ==========================================
-
-            if (
-                currentAnimal &&
-                Number(motherNumber) ===
-                Number(currentAnimal.animalNo)
-            ) {
-
-                motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
-                updateSaveButton();
-
-                showMessage(
-                    "An animal cannot be its own mother.",
-                    true
-                );
-
-                return;
-            }
-
-
-            // ==========================================
-            // CURRENT REQUEST
-            // ==========================================
-
-            const requestedMotherNumber =
-                motherNumber;
-
-
-            // Disable Save while checking
-
-            motherLookupValid =
-                false;
-
-            updateSaveButton();
-
-
-            try {
-
-                // ======================================
-                // FIND MOTHER AT CODE
-                // ======================================
-
-                const response = await fetch(
-                    `/api/animal/byanimalno/${encodeURIComponent(requestedMotherNumber)}`,
-                    {
-                        headers: {
-                            "app-version": "2"
-                        }
-                    }
-                );
-
-
-                // User changed number while waiting
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                // ======================================
-                // NOT FOUND
-                // ======================================
-
-                if (!response.ok) {
-
-                    motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Mother Animal No not found.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                const result =
-                    await response.json();
-
-
-                if (
-                    !result ||
-                    !result.atCode
-                ) {
-
-                    motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Mother Animal No not found.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                // ======================================
-                // GET MOTHER DETAILS
-                // ======================================
-
-                const motherResponse =
-                    await fetch(
-                        `/api/animal/${encodeURIComponent(result.atCode)}`,
-                        {
-                            headers: {
-                                "app-version": "2"
-                            }
-                        }
-                    );
-
-
-                // User changed number while waiting
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                if (!motherResponse.ok) {
-
-                    motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Unable to verify mother.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                const mother =
-                    await motherResponse.json();
-
-
-                // ======================================
-                // MUST BE FEMALE
-                // ======================================
-
-                if (
-                    !mother.gender ||
-                    mother.gender.toLowerCase() !== "female"
-                ) {
-
-                    motherCode.value = "";
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Selected Mother Animal No is not female.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                // ======================================
-                // FINAL INPUT CHECK
-                // ======================================
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                // ======================================
-                // VALID MOTHER
-                // ======================================
-
-                motherCode.value =
-                    result.atCode;
-
-
-                motherLookupValid =
-                    true;
-
-
-                updateSaveButton();
-
-
-                document.getElementById("message").style.display =
-                    "none";
-
-            }
-            catch (error) {
-
-                if (
-                    document.getElementById("eMotherNumber").value.trim()
-                    !== requestedMotherNumber
-                ) {
-                    return;
-                }
-
-
-                motherCode.value = "";
-
-                motherLookupValid =
-                    false;
-
-                updateSaveButton();
-
-
-                showMessage(
-                    "Error verifying mother: " +
-                    error.message,
-                    true
-                );
-            }
-        }
-
-
-        // ==========================================
-        // SAVE ANIMAL
-        // ==========================================
-
-        async function saveAnimal() {
-
-            if (!currentAnimal) {
-                return;
-            }
-
-
-            const saveButton =
-                document.getElementById("saveButton");
-
-
-            // Extra protection
-
-            if (saveButton.disabled) {
-
-                showMessage(
-                    "Please correct the validation errors before saving.",
-                    true
-                );
-
-                return;
-            }
-
-
-            const sourceType =
-                document.getElementById("eSourceType").value;
-
-
-            const motherNumber =
-                document.getElementById("eMotherNumber").value.trim();
-
-
-            const motherCode =
-                document.getElementById("eMotherCode").value.trim();
-
-
-            // ==========================================
-            // BORN VALIDATION
-            // ==========================================
-
-            if (sourceType === "BORN") {
-
-                if (!motherNumber) {
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Please enter Mother Animal No.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    Number(motherNumber) ===
-                    Number(currentAnimal.animalNo)
-                ) {
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "An animal cannot be its own mother.",
-                        true
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !motherLookupValid ||
-                    !motherCode
-                ) {
-
-                    motherLookupValid =
-                        false;
-
-                    updateSaveButton();
-
-                    showMessage(
-                        "Please enter a valid female Mother Animal No.",
-                        true
-                    );
-
-                    return;
-                }
-            }
-
-
-            // ==========================================
-            // MODEL
-            // ==========================================
-
-            const model = {
-
-                ATCode:
-                    document.getElementById("eATCode").value,
-
-                gender:
-                    document.getElementById("eGender").value,
-
-                ATCategoryCode:
-                    document.getElementById("eCategory").value,
-
-                DOB:
-                    document.getElementById("eDOB").value ||
-                    null,
-
-                SourceType:
-                    sourceType ||
-                    null,
-
-                PurchaseDate:
-                    document.getElementById("ePurchaseDate").value ||
-                    null,
-
-                Price:
-                    document.getElementById("ePrice").value
-                        ? Number(
-                            document.getElementById("ePrice").value
-                        )
-                        : null,
-
-                AgentName:
-                    document.getElementById("eAgentName").value ||
-                    null,
-
-                MotherCode:
-                    document.getElementById("eMotherCode").value ||
-                    null,
-
-                MotherNumber:
-                    document.getElementById("eMotherNumber").value
-                        ? Number(
-                            document.getElementById("eMotherNumber").value
-                        )
-                        : null,
-
-                Breed:
-                    document.getElementById("eBreed").value ||
-                    null
-            };
-
-
-            // ==========================================
-            // SAVE
-            // ==========================================
-
-            try {
-
-                const response = await fetch(
-                    "/api/animal/save",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json",
-                            "app-version": "2"
-                        },
-
-                        body: JSON.stringify(model)
-                    }
-                );
-
-
-                if (!response.ok) {
-
-                    const errorText =
-                        await response.text();
-
-
-                    showMessage(
-                        "Save failed: " +
-                        errorText,
-                        true
-                    );
-
-                    return;
-                }
-
-
-                showMessage(
-                    "Goat updated successfully.",
-                    false
-                );
-
-
-                await loadAnimalDetails(
-                    model.ATCode
-                );
-
-
-                document.getElementById("editCard").style.display =
-                    "none";
-
-            }
-            catch (error) {
-
-                showMessage(
-                    "Error saving goat: " +
-                    error.message,
-                    true
-                );
-            }
-        }
-
-
-        // ==========================================
-        // CANCEL
-        // ==========================================
-
-        function cancelEdit() {
-
-            document.getElementById("editCard").style.display =
-                "none";
-        }
-
-
-        // ==========================================
-        // DATE FOR INPUT
-        // ==========================================
-
-        function toInputDate(value) {
-
-            if (!value) {
-                return "";
-            }
-
-            return value.substring(0, 10);
-        }
-
-
-        // ==========================================
-        // DISPLAY DATE
-        // ==========================================
-
-        function formatDate(value) {
-
-            if (!value) {
-                return "-";
-            }
-
-
-            const date =
-                new Date(value);
-
-
-            if (isNaN(date.getTime())) {
-                return "-";
-            }
-
-
-            const day =
-                String(date.getDate()).padStart(2, "0");
-
-
-            const months = [
-                "Jan", "Feb", "Mar", "Apr",
-                "May", "Jun", "Jul", "Aug",
-                "Sep", "Oct", "Nov", "Dec"
-            ];
-
-
-            const month =
-                months[date.getMonth()];
-
-
-            const year =
-                date.getFullYear();
-
-
-            return `${day}/${month}/${year}`;
-        }
-
-
-        // ==========================================
-        // MESSAGE
-        // ==========================================
-
-        function showMessage(text, error) {
-
-            // REAL POPUP ALERT
-            if (error) {
-                alert(text);
-                return;
-            }
-
-            // Keep successful messages on the page
-            const message =
-                document.getElementById("message");
-
-            message.textContent =
-                text;
-
-            message.className =
-                "message success";
-
-            message.style.display =
-                "block";
-        }
-
-
-
-        // ==========================================
-        // GOAT INSPECTION - BULK ENTRY
-        // ==========================================
-
-        let inspectionRowCounter = 0;
-
-        async function loadInspectionAnimalNos() {
-            const list = document.getElementById("inspectionAnimalList");
-            const tbody = document.getElementById("inspectionRows");
-            try {
-                const response = await fetch("/api/animal/animalnos", {
-                    headers: { "app-version": "2" }
-                });
-                if (!response.ok) throw new Error("Unable to load Goat Numbers. HTTP " + response.status);
-
-                const result = await response.json();
-                const animalNos = Array.isArray(result) ? result : [];
-                list.innerHTML = "";
-                tbody.innerHTML = "";
-                inspectionRowCounter = 0;
-
-                animalNos.forEach(function (item) {
-                    // API currently returns integer AnimalNo values. Also
-                    // accept object-shaped values without breaking the list.
-                    const animalNo = (item && typeof item === "object")
-                        ? (item.animalNo ?? item.AnimalNo)
-                        : item;
-                    if (animalNo === null || animalNo === undefined || animalNo === "") return;
-
-                    const option = document.createElement("option");
-                    option.value = animalNo;
-                    list.appendChild(option);
-                    addInspectionRow(animalNo);
-                });
-
-                updateInspectionGrandTotal();
-                if (animalNos.length === 0) {
-                    showInspectionMessage("No registered goats found in ArticleInfo01.", true);
-                } else {
-                    document.getElementById("inspectionMessage").style.display = "none";
-                }
-            } catch (error) {
-                console.error("Inspection Goat Number loading error:", error);
-                showInspectionMessage(error.message, true);
-            }
-        }
-
-        function addInspectionRow(animalNo = "") {
-            const tbody = document.getElementById("inspectionRows");
-            const rowId = ++inspectionRowCounter;
-            const row = document.createElement("tr");
-            row.dataset.rowId = rowId;
-            row.innerHTML = `
-                            <td class="inspection-sr"></td>
-                            <td><input class="inspection-goat-no" type="number" min="1" step="1" list="inspectionAnimalList" placeholder="Goat No." value="${animalNo}" /></td>
-                            <td><input class="inspection-weight" type="number" min="0" step="0.01" placeholder="Weight" /></td>
-                            <td>
-                                <select class="inspection-teeth">
-                                    <option value="">-</option><option value="0">0</option><option value="2">2</option><option value="4">4</option><option value="6">6</option><option value="8">8</option>
-                                </select>
-                            </td>
-                            <td><select class="inspection-nails"><option value="">-</option><option value="true">Yes</option></select></td>
-                            <td><select class="inspection-hair"><option value="">-</option><option value="true">Yes</option></select></td>
-                            <td><button type="button" class="remove-row" onclick="removeInspectionRow(this)">Remove</button></td>
-                        `;
-            tbody.appendChild(row);
-            updateInspectionRowNumbers();
-            return row;
-        }
-
-        // Add rows in batches (20 per click).
-        function addInspectionRows(count) {
-            for (let i = 0; i < count; i++) addInspectionRow();
-        }
-
-        function removeInspectionRow(button) {
-            const tbody = document.getElementById("inspectionRows");
-            if (tbody.rows.length <= 1) {
-                showInspectionMessage("At least one row must remain.", true);
-                return;
-            }
-            button.closest("tr").remove();
-            updateInspectionRowNumbers();
-            updateInspectionGrandTotal();
-        }
-
-        function updateInspectionRowNumbers() {
-            document.querySelectorAll("#inspectionRows tr").forEach(function (row, index) {
-                row.querySelector(".inspection-sr").textContent = index + 1;
-            });
-        }
-
-        // Excel-style cell navigation: arrows move one cell; Enter moves down.
-        // The grid wraps at row edges. At the bottom, 20 more rows are added.
-        document.getElementById("inspectionRows").addEventListener("keydown", function (event) {
-            const selectors = [
-                ".inspection-goat-no",
-                ".inspection-weight",
-                ".inspection-teeth",
-                ".inspection-nails",
-                ".inspection-hair"
-            ];
-            const current = event.target;
-            if (!current.matches(selectors.join(","))) return;
-
-            let rowIndex = Array.from(this.rows).indexOf(current.closest("tr"));
-            let colIndex = selectors.findIndex(selector => current.matches(selector));
-            let nextRow = rowIndex;
-            let nextCol = colIndex;
-
-            if (event.key === "ArrowUp") nextRow--;
-            else if (event.key === "ArrowDown" || event.key === "Enter") nextRow++;
-            else if (event.key === "ArrowLeft") nextCol--;
-            else if (event.key === "ArrowRight") nextCol++;
-            else return;
-
-            event.preventDefault();
-
-            if (nextCol < 0) { nextCol = selectors.length - 1; nextRow--; }
-            if (nextCol >= selectors.length) { nextCol = 0; nextRow++; }
-            if (nextRow < 0) nextRow = 0;
-
-            if (nextRow >= this.rows.length) {
-                addInspectionRows(20);
-            }
-
-            const targetRow = this.rows[nextRow];
-            const target = targetRow.querySelector(selectors[nextCol]);
-            target.focus();
-            if (target.tagName === "INPUT" && target.type !== "number") target.select();
-        });
-
-        document.getElementById("inspectionRows").addEventListener("input", function (event) {
-            if (event.target.classList.contains("inspection-weight")) updateInspectionGrandTotal();
-        });
-
-        function updateInspectionGrandTotal() {
-            const total = Array.from(document.querySelectorAll("#inspectionRows .inspection-weight"))
-                .reduce(function (sum, input) {
-                    const value = input.value.trim() === "" ? 0 : Number(input.value);
-                    return sum + (Number.isFinite(value) ? value : 0);
-                }, 0);
-            document.getElementById("inspectionGrandTotal").textContent = total.toFixed(2);
-        }
-
-        function showInspectionMessage(text, isError) {
-            const message = document.getElementById("inspectionMessage");
-            message.textContent = text;
-            message.className = isError ? "message error" : "message success";
-            message.style.display = "block";
-        }
-
-        async function saveInspection() {
-            const date = document.getElementById("inspectionDate").value;
-            const rows = Array.from(document.querySelectorAll("#inspectionRows tr"));
-            const records = [];
-
-            if (!date) {
-                showInspectionMessage("Please select the Recording Date. It will apply to all goats.", true);
-                return;
-            }
-
-            // Validate every populated row before sending anything.
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const animalNoValue = row.querySelector(".inspection-goat-no").value.trim();
-                const weightValue = row.querySelector(".inspection-weight").value.trim();
-                const teethValue = row.querySelector(".inspection-teeth").value;
-                const nailsValue = row.querySelector(".inspection-nails").value;
-                const hairValue = row.querySelector(".inspection-hair").value;
-
-                // Blank Goat Number means the row is unused, so skip it.
-                if (!animalNoValue) continue;
-
-                if (!Number.isInteger(Number(animalNoValue)) || Number(animalNoValue) <= 0) {
-                    showInspectionMessage("Invalid Goat Number in row " + (i + 1) + ".", true);
-                    row.querySelector(".inspection-goat-no").focus();
-                    return;
-                }
-                if (weightValue !== "" && (!Number.isFinite(Number(weightValue)) || Number(weightValue) < 0)) {
-                    showInspectionMessage("Invalid Weight in row " + (i + 1) + ".", true);
-                    row.querySelector(".inspection-weight").focus();
-                    return;
-                }
-                if (teethValue !== "" && !["0", "2", "4", "6", "8"].includes(teethValue)) {
-                    showInspectionMessage("Teeth must be 0, 2, 4, 6 or 8 in row " + (i + 1) + ".", true);
-                    row.querySelector(".inspection-teeth").focus();
-                    return;
-                }
-
-                records.push({
-                    row: row,
-                    rowNumber: i + 1,
-                    animalNo: Number(animalNoValue),
-                    model: {
-                        AnimalNo: Number(animalNoValue),
-                        RecordDate: date,
-                        Weight: weightValue === "" ? null : Number(weightValue),
-                        Teeth: teethValue === "" ? null : Number(teethValue),
-                        Nails: nailsValue === "" ? null : true,
-                        Hair: hairValue === "" ? null : true
-                    }
-                });
-            }
-
-            if (records.length === 0) {
-                showInspectionMessage("Please enter at least one Goat Number before saving.", true);
-                return;
-            }
-
-            // Avoid accidentally submitting the same Goat Number twice in one session.
-            const seen = new Set();
-            for (const item of records) {
-                if (seen.has(item.animalNo)) {
-                    showInspectionMessage("Goat Number " + item.animalNo + " is entered more than once. Please check row " + item.rowNumber + ".", true);
-                    item.row.querySelector(".inspection-goat-no").focus();
-                    return;
-                }
-                seen.add(item.animalNo);
-            }
-
-            const saveButton = document.getElementById("saveInspectionButton");
-            saveButton.disabled = true;
-            let savedRows = [];
-            const failures = [];
-
-            try {
-                // Keep sending after an individual row fails, so one bad row
-                // cannot prevent later goats from being saved.
-                for (const item of records) {
-                    try {
-                        const response = await fetch("/api/animal/inspection/save", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "app-version": "2"
-                            },
-                            body: JSON.stringify(item.model)
-                        });
-                        const responseText = await response.text();
-                        if (!response.ok) {
-                            throw new Error("HTTP " + response.status + ": " + (responseText || response.statusText));
-                        }
-                        savedRows.push(item.row);
-                    } catch (error) {
-                        failures.push("Row " + item.rowNumber + " (Goat " + item.animalNo + "): " + error.message);
-                    }
-                }
-
-                // Remove only rows confirmed saved. Failed rows remain for correction/retry.
-                savedRows.forEach(row => row.remove());
-                updateInspectionRowNumbers();
-                updateInspectionGrandTotal();
-
-                if (failures.length === 0) {
-                    showInspectionMessage(records.length + " goat inspection record(s) saved successfully for " + date + ".", false);
-                    if (document.querySelectorAll("#inspectionRows tr").length < 25) {
-                        addInspectionRows(25 - document.querySelectorAll("#inspectionRows tr").length);
-                    }
-                } else {
-                    showInspectionMessage(savedRows.length + " of " + records.length + " saved. Failed rows remain in the sheet:\n" + failures.join("\n"), true);
-                }
-            } finally {
-                saveButton.disabled = false;
-            }
-        }
-
-        // Goat rows are populated from ArticleInfo01 after successful login.
-        // Add 20 Rows remains available for additional blank rows.
-
-    </script>
-
+    <script src="js/app.js"></script>
+    <script src="js/animal.js"></script>
+    <script src="js/growth.js"></script>
+    <script src="js/inspection.js"></script>
+    <script src="js/item-master.js"></script>
+    <script src="js/food-recipe.js"></script>
+    <script src="js/food-inventory.js"></script>
+    <script src="js/food-issue.js"></script>
 </body>
 </html>

@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Department Edit - Farm Breeding</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: Arial,sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            color: #222
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 28px auto;
+            padding: 16px
+        }
+
+        .card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0001
+        }
+
+        h2 {
+            margin-top: 0
+        }
+
+        .hint {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+            gap: 16px;
+            margin: 20px 0
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px
+        }
+
+        input[type=number], input[type=date], input[type=search] {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #c9cfd5;
+            border-radius: 6px;
+            font-size: 16px
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 16px 0
+        }
+
+            .toolbar button, .save {
+                border: 0;
+                border-radius: 6px;
+                padding: 10px 16px;
+                font-size: 14px;
+                cursor: pointer;
+                background: #e8edf0;
+                color: #222
+            }
+
+        .save {
+            background: #1f4d3a;
+            color: #fff;
+            font-size: 16px;
+            padding: 12px 22px
+        }
+
+            .toolbar button:disabled, .save:disabled {
+                opacity: .55;
+                cursor: not-allowed
+            }
+
+        .list-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 16px 0 8px
+        }
+
+        .goat-list {
+            border: 1px solid #d9dee3;
+            border-radius: 7px;
+            max-height: 360px;
+            overflow: auto
+        }
+
+        .goat-row {
+            display: grid;
+            grid-template-columns: 28px 1fr 1fr 1.3fr 1fr;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 13px;
+            border-bottom: 1px solid #edf0f2
+        }
+
+        .goat-head {
+            position: sticky;
+            top: 0;
+            background: #eef2f4;
+            font-weight: bold;
+            font-size: 13px
+        }
+
+        .goat-cell {
+            min-width: 0;
+            overflow-wrap: anywhere
+        }
+
+        .goat-row input {
+            width: 18px;
+            height: 18px
+        }
+
+        .dept-tag {
+            font-size: 12px;
+            color: #46515b;
+            background: #eef2f4;
+            padding: 4px 7px;
+            border-radius: 5px;
+            display: inline-block
+        }
+
+        @media(max-width:600px) {
+            .goat-row {
+                grid-template-columns: 24px .9fr .8fr 1.1fr 1fr;
+                gap: 6px;
+                padding: 9px 7px;
+                font-size: 13px
+            }
+
+            .goat-head {
+                font-size: 11px
+            }
+        }
+
+        .goat-row:last-child {
+            border-bottom: 0
+        }
+
+        .goat-row input {
+            width: 18px;
+            height: 18px
+        }
+
+        .muted {
+            color: #68727c;
+            font-size: 13px
+        }
+
+        .msg {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap
+        }
+
+            .msg.ok {
+                display: block;
+                background: #e5f5eb;
+                color: #14532d
+            }
+
+            .msg.err {
+                display: block;
+                background: #ffe5e5;
+                color: #8b1e1e
+            }
+
+        .count {
+            font-weight: bold
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: #1f4d3a
+        }
+
+        @media(max-width:520px) {
+            .card {
+                padding: 17px
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="card">
+            <h2>Department Edit – Bulk Assignment</h2>
+            <p class="hint">Select one or more active goats, enter the Department ID and Effective Date, then save once. The same department and date will be assigned to every selected goat. Each save adds a new record to <b>AnimalDepartment</b>; previous department history is retained.</p>
+            <div class="fields">
+                <div><label for="departmentId">Department</label><select id="departmentId" required style="width:100%;padding:11px;border:1px solid #c9cfd5;border-radius:6px;font-size:16px"><option value="">Loading active departments…</option></select></div>
+                <div><label for="effectiveDate">Effective Date</label><input id="effectiveDate" type="date"></div>
+            </div>
+            <div class="list-head"><div><b>Select goats</b> <span class="muted">(active goats only)</span><div class="muted"><span id="selectedCount" class="count">0</span> selected of <span id="totalCount">0</span></div></div><div><input id="search" type="search" placeholder="Search Animal No, gender or breed" aria-label="Search goats by Animal Number, gender or breed"></div></div>
+            <div class="toolbar"><button type="button" id="selectVisible">Select visible</button><button type="button" id="clearSelection">Clear selection</button><button type="button" id="reload">Reload goat list</button></div>
+            <div class="goat-list"><div class="goat-row goat-head"><span></span><span>Animal No.</span><span>Gender</span><span>Breed</span><span>Current Dept.</span></div><div id="goatList"><div class="goat-row muted">Loading active goats…</div></div></div>
+            <div class="toolbar"><button type="button" class="save" id="save" disabled>Save Department for Selected Goats</button></div>
+            <div id="msg" class="msg" role="status" aria-live="polite"></div>
+            <a class="back" href="/">Back to Farm Portal</a>
+        </div>
+    </div>
+    <script>
+        const listEl = document.getElementById('goatList'), searchEl = document.getElementById('search'), selectedCountEl = document.getElementById('selectedCount'), totalCountEl = document.getElementById('totalCount'), saveBtn = document.getElementById('save'), msg = document.getElementById('msg');
+        let goats = []; const selected = new Set();
+        const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); document.getElementById('effectiveDate').value = today.toISOString().slice(0, 10);
+        function showMessage(text, type) { msg.textContent = text; msg.className = 'msg ' + type; }
+        function updateCounts() { selectedCountEl.textContent = selected.size; totalCountEl.textContent = goats.length; saveBtn.disabled = selected.size === 0; }
+        function renderList() { const q = searchEl.value.trim().toLowerCase(); const visible = goats.filter(g => [g.animalNo, g.gender, g.breed, g.currentDepartmentID].some(v => String(v ?? '').toLowerCase().includes(q))); listEl.replaceChildren(); if (!visible.length) { const empty = document.createElement('div'); empty.className = 'goat-row muted'; empty.textContent = goats.length ? 'No goats match your search.' : 'No active goats were returned by the API.'; listEl.appendChild(empty); } else { for (const g of visible) { const row = document.createElement('div'); row.className = 'goat-row'; const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = selected.has(g.animalNo); cb.setAttribute('aria-label', 'Select Animal ' + g.animalNo); cb.addEventListener('change', () => { if (cb.checked) selected.add(g.animalNo); else selected.delete(g.animalNo); updateCounts(); }); const animal = document.createElement('span'); animal.className = 'goat-cell'; animal.textContent = g.animalNo; const gender = document.createElement('span'); gender.className = 'goat-cell'; gender.textContent = g.gender || '—'; const breed = document.createElement('span'); breed.className = 'goat-cell'; breed.textContent = g.breed || '—'; const dept = document.createElement('span'); dept.className = 'goat-cell'; const tag = document.createElement('span'); tag.className = 'dept-tag'; tag.textContent = g.currentDepartmentID == null ? 'Not assigned' : g.currentDepartmentID; dept.appendChild(tag); row.append(cb, animal, gender, breed, dept); listEl.appendChild(row); } } updateCounts(); }
+        async function loadDepartments() { const deptEl = document.getElementById('departmentId'); deptEl.innerHTML = '<option value="">Loading active departments…</option>'; try { const r = await fetch('/api/animal/department/list', { headers: { 'app-version': '2' } }); const body = await r.text(); if (!r.ok) throw new Error(body || ('HTTP ' + r.status)); const data = JSON.parse(body); if (!Array.isArray(data)) throw new Error('Unexpected department list response.'); deptEl.innerHTML = '<option value="">Select department</option>'; for (const d of data) { const opt = document.createElement('option'); opt.value = d.departmentID; opt.textContent = d.departmentName + ' (ID: ' + d.departmentID + ')'; deptEl.appendChild(opt); } if (!data.length) { deptEl.innerHTML = '<option value="">No active departments available</option>'; showMessage('No active departments found in Department table.', 'err'); } } catch (e) { deptEl.innerHTML = '<option value="">Could not load departments</option>'; showMessage('Could not load departments: ' + e.message, 'err'); } }
+        async function loadGoats() { listEl.textContent = 'Loading active goats…'; showMessage('', ''); try { const r = await fetch('/api/animal/department/goats', { headers: { 'app-version': '2' } }); const body = await r.text(); if (!r.ok) throw new Error(body || ('HTTP ' + r.status)); const data = JSON.parse(body); if (!Array.isArray(data)) throw new Error('Unexpected response from department goat list API.'); goats = data.filter(g => Number.isInteger(Number(g.animalNo)) && Number(g.animalNo) > 0).map(g => ({ animalNo: Number(g.animalNo), gender: g.gender ?? '', breed: g.breed ?? '', currentDepartmentID: g.currentDepartmentID == null ? null : Number(g.currentDepartmentID) })).sort((a, b) => a.animalNo - b.animalNo); const valid = new Set(goats.map(g => g.animalNo)); for (const n of [...selected]) if (!valid.has(n)) selected.delete(n); renderList(); if (!goats.length) showMessage('No active goats are available for department assignment.', 'err'); } catch (e) { listEl.textContent = 'Could not load active goats.'; showMessage('Could not load goat list: ' + e.message, 'err'); goats = []; selected.clear(); updateCounts(); } }
+        searchEl.addEventListener('input', renderList);
+        document.getElementById('selectVisible').addEventListener('click', () => { const q = searchEl.value.trim().toLowerCase(); goats.filter(g => [g.animalNo, g.gender, g.breed, g.currentDepartmentID].some(v => String(v ?? '').toLowerCase().includes(q))).forEach(g => selected.add(g.animalNo)); renderList(); });
+        document.getElementById('clearSelection').addEventListener('click', () => { selected.clear(); renderList(); });
+        document.getElementById('reload').addEventListener('click', loadGoats);
+        saveBtn.addEventListener('click', async () => { const departmentValue = document.getElementById('departmentId').value, departmentID = Number(departmentValue), departmentName = document.getElementById('departmentId').selectedOptions[0]?.textContent || '', effectiveDate = document.getElementById('effectiveDate').value, animalList = [...selected].sort((a, b) => a - b); if (!animalList.length) return showMessage('Select at least one goat.', 'err'); if (!departmentValue || !Number.isInteger(departmentID) || departmentID <= 0) return showMessage('Select an active department.', 'err'); if (!effectiveDate) return showMessage('Select an Effective Date.', 'err'); const confirmText = 'Assign ' + departmentName + ' to ' + animalList.length + ' selected goat(s), effective ' + effectiveDate + '? Goats already in this department will be skipped; unchecked goats will not change.'; if (!window.confirm(confirmText)) return; saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; try { const r = await fetch('/api/animal/department/assign-bulk', { method: 'POST', headers: { 'Content-Type': 'application/json', 'app-version': '2' }, body: JSON.stringify({ AnimalNos: animalList, DepartmentID: departmentID, EffectiveDate: effectiveDate }) }); const body = await r.text(); let result; try { result = JSON.parse(body); } catch { result = { message: body }; } if (!r.ok) throw new Error(result.message || body || ('HTTP ' + r.status)); selected.clear(); await loadGoats(); showMessage((result.message || 'Department assignments processed.') + '\nNew assignments: ' + (result.assignedCount ?? 0) + '\nAlready in selected department (skipped): ' + (result.skippedAlreadyInDepartment ?? 0) + '\nUnchecked goats: unchanged\nDepartment ID: ' + departmentID + '\nDepartment: ' + departmentName + '\nEffective Date: ' + effectiveDate, 'ok'); } catch (e) { showMessage('Save failed: ' + e.message + '\nYour selected goats have been kept selected.', 'err'); } finally { saveBtn.textContent = 'Save Department for Selected Goats'; updateCounts(); } });
+        loadDepartments();
+        loadGoats();
+    </script>
+</body>
+</html>

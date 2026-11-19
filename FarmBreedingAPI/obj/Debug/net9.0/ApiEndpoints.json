@@ -59,6 +59,237 @@
   },
   {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "AssignDepartment",
+    "RelativePath": "api/Animal/department/assign",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BDepartmentAssignmentModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "AssignDepartmentBulk",
+    "RelativePath": "api/Animal/department/assign-bulk",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BBulkDepartmentAssignmentModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetDepartmentGoats",
+    "RelativePath": "api/Animal/department/goats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetActiveDepartments",
+    "RelativePath": "api/Animal/department/list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetFoodIssueCurrent",
+    "RelativePath": "api/Animal/food/issues/current",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "foodItemID",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetFoodIssueDates",
+    "RelativePath": "api/Animal/food/issues/dates",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "DeleteFoodIssue",
+    "RelativePath": "api/Animal/food/issues/delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "foodItemID",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodIssue",
+    "RelativePath": "api/Animal/food/issues/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodIssueSaveModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "UpdateFoodIssue",
+    "RelativePath": "api/Animal/food/issues/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodIssueSaveModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodProduction",
+    "RelativePath": "api/Animal/food/production/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "m",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodProductionInput",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodPurchase",
+    "RelativePath": "api/Animal/food/purchases/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "m",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodPurchaseInput",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetFoodRecipes",
+    "RelativePath": "api/Animal/food/recipes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodRecipe",
+    "RelativePath": "api/Animal/food/recipes/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodRecipeSaveModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetFoodStockReport",
+    "RelativePath": "api/Animal/food/stock/report",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fromDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "toDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodWaste",
+    "RelativePath": "api/Animal/food/waste/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "m",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodWasteInput",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "GetGrowth",
     "RelativePath": "api/Animal/growth/{atcode}",
     "HttpMethod": "GET",
@@ -107,6 +338,32 @@
   },
   {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetItems",
+    "RelativePath": "api/Animal/items",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveItem",
+    "RelativePath": "api/Animal/items/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BItemSaveModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "GetPhotos",
     "RelativePath": "api/Animal/photos/{atcode}",
     "HttpMethod": "GET",
@@ -142,6 +399,22 @@
       {
         "Name": "model",
         "Type": "FarmBreedingAPI.Models.Animal",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "UpdateGoatStatus",
+    "RelativePath": "api/Animal/status/update",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BGoatStatusUpdateModel",
         "IsRequired": true
       }
     ],
