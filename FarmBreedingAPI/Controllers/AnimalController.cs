@@ -13,7 +13,9 @@ namespace FarmBreedingAPI.Controllers
     [Route("api/[controller]")]
     public partial class AnimalController : ControllerBase
     {
-        private readonly string connectionString = "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
+        private readonly string connectionString =
+            "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.lnndywzphqtvzcvunmqc;Password=qAZVexd1DM2Ya2UE;SSL Mode=Require;Trust Server Certificate=true;Pooling=false;Timeout=15;Command Timeout=30";
+
 
         // ============================
         // 🔥 COMMON DATE FIX METHOD
@@ -614,8 +616,9 @@ WHERE ""ATCode"" = @ATCode";
                 // Do not add a redundant history row when the goat is already
                 // in this department as of the requested EffectiveDate.
                 const string insertSql = @"
-                    INSERT INTO ""AnimalDepartment"" (""ATCode"", ""DepartmentID"", ""EffectiveDate"")
-                    SELECT a.""ATCode"", @DepartmentID, @EffectiveDate
+                    INSERT INTO ""AnimalDepartment""
+                        (""ATCode"", ""AnimalNo"", ""DepartmentID"", ""EffectiveDate"")
+                    SELECT a.""ATCode"", a.""AnimalNo"", @DepartmentID, @EffectiveDate
                     FROM ""ArticleInfo01"" a
                     WHERE a.""AnimalNo"" = ANY(@AnimalNos)
                       AND COALESCE(a.""GoatStatus"", 'Active') = 'Active'
@@ -665,7 +668,12 @@ WHERE ""ATCode"" = @ATCode";
             {
                 await using var conn = new NpgsqlConnection(connectionString);
                 await conn.OpenAsync();
-                const string sql = @"INSERT INTO ""AnimalDepartment"" (""ATCode"", ""DepartmentID"", ""EffectiveDate"") SELECT ""ATCode"", @DepartmentID, @EffectiveDate FROM ""ArticleInfo01"" WHERE ""AnimalNo""=@AnimalNo";
+                const string sql = @"
+                    INSERT INTO ""AnimalDepartment""
+                        (""ATCode"", ""AnimalNo"", ""DepartmentID"", ""EffectiveDate"")
+                    SELECT ""ATCode"", ""AnimalNo"", @DepartmentID, @EffectiveDate
+                    FROM ""ArticleInfo01""
+                    WHERE ""AnimalNo"" = @AnimalNo";
                 await using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@AnimalNo", model.AnimalNo);
                 cmd.Parameters.AddWithValue("@DepartmentID", model.DepartmentID);
