@@ -475,12 +475,13 @@
                     <div class="edit-field"><label for="openingDate">Opening Date</label><input id="openingDate" type="date"></div>
                     <div class="edit-field"><label for="openingItem">Item</label><select id="openingItem"></select></div>
                     <div class="edit-field"><label for="openingQty">Quantity</label><input id="openingQty" type="number" min="0.001" step="0.001"></div>
+                    <div class="edit-field"><label for="openingValue">Opening Value (PKR)</label><input id="openingValue" type="number" min="0" step="0.01" placeholder="Enter total stock value"></div>
                     <div class="edit-field"><label for="openingRemarks">Remarks</label><input id="openingRemarks"></div>
                 </div>
                 <div class="inspection-actions"><button type="button" onclick="saveOpeningBalance()">Save Opening Balance</button></div>
                 <div id="openingMessage" class="message"></div>
                 <h3>Recorded Opening Balances</h3>
-                <div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Quantity</th><th>Unit</th><th>Date</th></tr></thead><tbody id="openingRows"></tbody></table></div>
+                <div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Quantity</th><th>Unit</th><th>Opening Value (PKR)</th><th>Date</th></tr></thead><tbody id="openingRows"></tbody></table></div>
             </div>
 
             <!-- FOOD RECIPE -->
