@@ -51,15 +51,15 @@ function addRecipeIngredient(itemID = '', qty = '') {
         </td>
         <td class="recipe-type">-</td>
         <td>
-            <input class="recipe-qty" type="number" min="0.001" step="0.001" value="${qty}" />
+            <input class="recipe-qty" type="number" min="0.001" step="0.001" value="${qty}" oninput="updateRecipeTotals()" />
         </td>
         <td class="recipe-unit">-</td>
         <td>
-            <button type="button" onclick="this.closest('tr').remove()">Remove</button>
+            <button type="button" onclick="this.closest('tr').remove();updateRecipeTotals()">Remove</button>
         </td>
     `;
 
-    document.getElementById('recipeIngredientRows').appendChild(tr);
+    document.getElementById('recipeIngredientRows').appendChild(tr); tr.querySelector('.recipe-qty').addEventListener('input', updateRecipeTotals); updateRecipeTotals();
 
     if (itemID) {
         updateRecipeUnit(tr.querySelector('.recipe-item'));
@@ -134,6 +134,7 @@ function editFoodRecipe(id) {
     });
 
     document.getElementById('saveRecipeButton').textContent = 'Update Recipe';
+    updateRecipeTotals();
 }
 
 
@@ -154,10 +155,12 @@ function resetFoodRecipe() {
     addRecipeIngredient();
 
     document.getElementById('saveRecipeButton').textContent = 'Save Recipe';
+    updateRecipeTotals();
 }
 
 
 async function saveFoodRecipe() {
+    updateRecipeTotals();
     const details = [
         ...document.querySelectorAll('#recipeIngredientRows tr')
     ].map(tr => ({
@@ -193,5 +196,22 @@ async function saveFoodRecipe() {
             'Unable to save recipe: ' + e.message,
             true
         );
+    }
+}
+
+
+function updateRecipeTotals() {
+    const total = [...document.querySelectorAll('#recipeIngredientRows .recipe-qty')]
+        .reduce((sum, input) => sum + (Number(input.value) || 0), 0);
+    const batch = Number(document.getElementById('recipeOutputQty')?.value) || 0;
+    const difference = batch - total;
+    const totalElement = document.getElementById('recipeIngredientTotal');
+    const differenceElement = document.getElementById('recipeIngredientDifference');
+
+    if (totalElement) totalElement.textContent = total.toFixed(3);
+    if (differenceElement) {
+        differenceElement.textContent = Math.abs(difference).toFixed(3) +
+            (Math.abs(difference) <= 0.0005 ? ' MATCH' : difference > 0 ? ' SHORT' : ' EXCESS');
+        differenceElement.style.color = Math.abs(difference) <= 0.0005 ? 'green' : 'red';
     }
 }

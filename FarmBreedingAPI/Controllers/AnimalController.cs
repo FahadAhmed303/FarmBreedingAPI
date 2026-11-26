@@ -1151,6 +1151,8 @@ WHERE ""ATCode"" = @ATCode";
             if (model == null || model.FinishedFoodID <= 0 || model.BatchOutputQty <= 0 || model.Details == null || model.Details.Count == 0)
                 return BadRequest("Select a finished food, enter a positive batch output, and add at least one ingredient.");
             if (model.Details.Any(x => x.RawMaterialID <= 0 || x.Quantity <= 0)) return BadRequest("Every ingredient must have a valid item and quantity greater than zero.");
+            var ingredientTotal = model.Details.Sum(x => x.Quantity);
+            if (Math.Abs(ingredientTotal - model.BatchOutputQty) > 0.0005m) return BadRequest($"Ingredient total ({ingredientTotal:0.000}) must equal Batch Output ({model.BatchOutputQty:0.000}).");
             if (model.Details.GroupBy(x => x.RawMaterialID).Any(g => g.Count() > 1)) return BadRequest("An item can only be added once in a recipe.");
             try
             {
@@ -1199,6 +1201,34 @@ WHERE ""ATCode"" = @ATCode";
             c.Parameters.AddWithValue("@BatchOutputQty", m.BatchOutputQty);
             c.Parameters.AddWithValue("@EffectiveDate", NpgsqlDbType.Date, m.EffectiveDate.Date);
             c.Parameters.AddWithValue("@IsActive", m.IsActive);
+        }
+
+        // OPENING BALANCE: ledger-only implementation; each item can have one OPENING entry.
+        public class FoodOpeningBalanceInput { public DateTime OpeningDate { get; set; } public int ItemID { get; set; } public decimal Quantity { get; set; } public string? Remarks { get; set; } }
+        [HttpGet("food/opening/list")]
+        public async Task<IActionResult> GetFoodOpeningBalances()
+        {
+            try
+            {
+                var rows = new List<object>(); await using var c = new NpgsqlConnection(connectionString); await c.OpenAsync();
+                const string sql = @"SELECT s.""TransactionDate"",s.""ItemID"",i.""ItemName"",i.""BaseUnit"",s.""QtyIn"" FROM public.""StockTransaction"" s JOIN public.""Item"" i ON i.""ItemID""=s.""ItemID"" WHERE s.""TransactionType""='OPENING' ORDER BY s.""TransactionDate"",i.""ItemName""";
+                await using var q = new NpgsqlCommand(sql, c); await using var r = await q.ExecuteReaderAsync(); while (await r.ReadAsync()) rows.Add(new { itemID = Convert.ToInt32(r["ItemID"]), itemName = r["ItemName"].ToString(), baseUnit = r["BaseUnit"].ToString(), quantity = Convert.ToDecimal(r["QtyIn"]), openingDate = Convert.ToDateTime(r["TransactionDate"]).ToString("yyyy-MM-dd") }); return Ok(rows);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+        [HttpPost("food/opening/save")]
+        public async Task<IActionResult> SaveFoodOpeningBalance([FromBody] FoodOpeningBalanceInput m)
+        {
+            if (m == null || m.ItemID <= 0 || m.Quantity <= 0 || m.OpeningDate == default) return BadRequest("Date, item, and positive quantity are required.");
+            try
+            {
+                await using var c = new NpgsqlConnection(connectionString); await c.OpenAsync(); await using var tx = await c.BeginTransactionAsync();
+                await using (var check = new NpgsqlCommand(@"SELECT COUNT(*) FROM public.""StockTransaction"" WHERE ""ItemID""=@id AND ""TransactionType""='OPENING'", c, tx)) { check.Parameters.AddWithValue("@id", m.ItemID); if (Convert.ToInt32(await check.ExecuteScalarAsync()) > 0) return BadRequest("Opening balance already exists for this item. Delete or correct the existing entry through the database before adding another."); }
+                await using (var valid = new NpgsqlCommand(@"SELECT COUNT(*) FROM public.""Item"" WHERE ""ItemID""=@id AND ""IsActive""=TRUE", c, tx)) { valid.Parameters.AddWithValue("@id", m.ItemID); if (Convert.ToInt32(await valid.ExecuteScalarAsync()) != 1) return BadRequest("Item not found or inactive."); }
+                await using (var ins = new NpgsqlCommand(@"INSERT INTO public.""StockTransaction"" (""TransactionDate"",""ItemID"",""TransactionType"",""SourceType"",""SourceID"",""SourceDetailID"",""QtyIn"",""QtyOut"") VALUES (@date,@id,'OPENING','FOOD_OPENING',NULL,NULL,@qty,0)", c, tx)) { ins.Parameters.AddWithValue("@date", NpgsqlDbType.Date, m.OpeningDate.Date); ins.Parameters.AddWithValue("@id", m.ItemID); ins.Parameters.AddWithValue("@qty", m.Quantity); await ins.ExecuteNonQueryAsync(); }
+                await tx.CommitAsync(); return Ok(new { message = "Opening balance saved." });
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         // ============================

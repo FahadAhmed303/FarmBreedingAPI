@@ -14,6 +14,7 @@ function showModule(moduleName) {
     document.getElementById("itemMasterCard").style.display =
         moduleName === "items" ? "block" : "none";
     document.getElementById("foodRecipeCard").style.display = moduleName === "recipes" ? "block" : "none";
+    document.getElementById("foodOpeningCard").style.display = moduleName === "foodOpening" ? "block" : "none";
     document.getElementById("foodIssueCard").style.display = moduleName === "foodIssue" ? "block" : "none";
     document.getElementById("foodPurchaseCard").style.display = moduleName === "foodPurchase" ? "block" : "none";
     document.getElementById("foodProductionCard").style.display = moduleName === "foodProduction" ? "block" : "none";
@@ -25,11 +26,13 @@ function showModule(moduleName) {
     document.getElementById("navGrowth").classList.toggle("active", moduleName === "growth");
     document.getElementById("navItems").classList.toggle("active", moduleName === "items");
     document.getElementById("navRecipes").classList.toggle("active", moduleName === "recipes");
+    document.getElementById("navFoodOpening").classList.toggle("active", moduleName === "foodOpening");
     document.getElementById("navFoodIssue").classList.toggle("active", moduleName === "foodIssue");
     ["FoodPurchase", "FoodProduction", "FoodWaste", "FoodStock"].forEach((n) => { const id = "nav" + n; document.getElementById(id).classList.toggle("active", moduleName === { FoodPurchase: "foodPurchase", FoodProduction: "foodProduction", FoodWaste: "foodWaste", FoodStock: "foodStock" }[n]); });
 
     if (moduleName === "items") loadItems();
     if (moduleName === "recipes") loadRecipeModule();
+    if (moduleName === "foodOpening") loadOpeningBalanceModule();
     if (moduleName === "foodIssue") loadFoodIssueModule();
     if (moduleName === "foodPurchase") loadPurchaseModule();
     if (moduleName === "foodProduction") loadProductionModule();

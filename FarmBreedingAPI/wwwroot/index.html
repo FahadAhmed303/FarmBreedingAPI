@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -352,6 +353,7 @@
                 <button type="button" id="navGrowth" onclick="showModule('growth')">Growth Records</button>
                 <button type="button" id="navItems" onclick="showModule('items')">Item Master</button>
                 <button type="button" id="navRecipes" onclick="showModule('recipes')">Food Recipe</button>
+                <button type="button" id="navFoodOpening" onclick="showModule('foodOpening')">Opening Balance</button>
                 <button type="button" id="navFoodIssue" onclick="showModule('foodIssue')">Daily Food Issuance</button>
                 <button type="button" id="navFoodPurchase" onclick="showModule('foodPurchase')">Food Purchase</button>
                 <button type="button" id="navFoodProduction" onclick="showModule('foodProduction')">Food Production</button>
@@ -466,6 +468,21 @@
             </div>
 
 
+            <!-- FOOD OPENING BALANCE -->
+            <div id="foodOpeningCard" class="card" style="display:none;">
+                <h2>Food Opening Balance</h2>
+                <div class="edit-grid">
+                    <div class="edit-field"><label for="openingDate">Opening Date</label><input id="openingDate" type="date"></div>
+                    <div class="edit-field"><label for="openingItem">Item</label><select id="openingItem"></select></div>
+                    <div class="edit-field"><label for="openingQty">Quantity</label><input id="openingQty" type="number" min="0.001" step="0.001"></div>
+                    <div class="edit-field"><label for="openingRemarks">Remarks</label><input id="openingRemarks"></div>
+                </div>
+                <div class="inspection-actions"><button type="button" onclick="saveOpeningBalance()">Save Opening Balance</button></div>
+                <div id="openingMessage" class="message"></div>
+                <h3>Recorded Opening Balances</h3>
+                <div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Item</th><th>Quantity</th><th>Unit</th><th>Date</th></tr></thead><tbody id="openingRows"></tbody></table></div>
+            </div>
+
             <!-- FOOD RECIPE -->
             <div id="foodRecipeCard" class="card" style="display:none;">
                 <h2>Food Recipe</h2>
@@ -473,12 +490,13 @@
                     <div class="edit-field"><label for="recipeFinishedFood">Finished Food</label><select id="recipeFinishedFood"></select></div>
                     <div class="edit-field"><label for="recipeName">Recipe Name</label><input id="recipeName" maxlength="120" placeholder="Recipe name" /></div>
                     <div class="edit-field"><label for="recipeVersion">Version No</label><input id="recipeVersion" type="number" min="1" value="1" /></div>
-                    <div class="edit-field"><label for="recipeOutputQty">Batch Output Quantity</label><input id="recipeOutputQty" type="number" min="0.001" step="0.001" value="1" /></div>
+                    <div class="edit-field"><label for="recipeOutputQty">Batch Output Quantity</label><input id="recipeOutputQty" type="number" min="0.001" step="0.001" value="1" oninput="updateRecipeTotals()" /></div>
                     <div class="edit-field"><label for="recipeDate">Effective Date</label><input id="recipeDate" type="date" /></div>
                     <div class="edit-field"><label><input id="recipeActive" type="checkbox" checked /> Active</label></div>
                 </div>
                 <h3>Ingredients (Raw Material or Finished Food)</h3>
                 <div class="inspection-table-wrap"><table class="inspection-table" style="min-width:650px"><thead><tr><th>Item</th><th>Item Type</th><th>Quantity</th><th>Unit</th><th></th></tr></thead><tbody id="recipeIngredientRows"></tbody></table></div>
+                <div style="margin:10px 0;font-weight:600">Ingredient Total: <span id="recipeIngredientTotal">0.000</span> | Difference: <span id="recipeIngredientDifference">0.000</span></div>
                 <div class="inspection-actions"><button type="button" onclick="addRecipeIngredient()">+ Add Ingredient</button><button type="button" id="saveRecipeButton" onclick="saveFoodRecipe()">Save Recipe</button><button type="button" onclick="resetFoodRecipe()">New / Clear</button></div>
                 <div id="recipeMessage" class="message"></div>
                 <h3>Saved Recipes</h3><div class="inspection-table-wrap"><table class="inspection-table"><thead><tr><th>Finished Food</th><th>Recipe</th><th>Version</th><th>Batch Output</th><th>Effective Date</th><th>Ingredients</th><th>Action</th></tr></thead><tbody id="recipeRows"></tbody></table></div>
@@ -984,6 +1002,7 @@
     <script src="js/inspection.js"></script>
     <script src="js/item-master.js"></script>
     <script src="js/food-recipe.js"></script>
+    <script src="js/food-opening.js"></script>
     <script src="js/food-inventory.js"></script>
     <script src="js/food-issue.js"></script>
 </body>

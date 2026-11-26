@@ -195,6 +195,32 @@
   },
   {
     "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "GetFoodOpeningBalances",
+    "RelativePath": "api/Animal/food/opening/list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
+    "Method": "SaveFoodOpeningBalance",
+    "RelativePath": "api/Animal/food/opening/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "m",
+        "Type": "FarmBreedingAPI.Controllers.AnimalController\u002BFoodOpeningBalanceInput",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FarmBreedingAPI.Controllers.AnimalController",
     "Method": "SaveFoodProduction",
     "RelativePath": "api/Animal/food/production/save",
     "HttpMethod": "POST",
